@@ -1,3 +1,16 @@
+/*
+* TO DO: 
+* 
+* 1- Colocar um filtro para organizar os produtos por preço (mais barato, mais caro e vice-versa);
+* 2- Colocar um filtro para a plataforma, ao selecionar a plataforma, os produtos devem ser filtrados;
+*
+*/ 
+
+
+let produtosGlobal = [];
+let paginaAtual = 0;
+let totalPaginas = 0;
+
 // Função para calcular o desconto
 function calcularDesconto(preco, precoComDesconto) {
     return Math.round(((preco - precoComDesconto) / preco) * 100);
@@ -66,9 +79,9 @@ function adicionarCards(produtos, containerId) {
 }
 
 // Função para fazer a requisição ao endpoint
-async function carregarProdutosCatalogo(containerId, nome = '') {
+async function carregarProdutosCatalogo(containerId, nome = '', pagina = 0) {
     try {
-        const url = nome ? `http://localhost:8080/api/produtos/search?nome=${nome}` : `http://localhost:8080/api/produtos?page=0&size=9`;
+        const url = nome ? `http://localhost:8080/api/produtos/search?nome=${nome}` : `http://localhost:8080/api/produtos?page=${pagina}&size=9`;
         console.log(`Fetching URL: ${url}`); // Log para depuração
         const response = await fetch(url);
         const data = await response.json();
@@ -79,6 +92,10 @@ async function carregarProdutosCatalogo(containerId, nome = '') {
         const itensContainer = document.getElementById('itensContainer');
         const itensDePesquisa = document.getElementById('itensDePesquisa');
 
+        // Limpa os contêineres de itens antes de adicionar novos itens
+        itensContainer.innerHTML = '';
+        itensDePesquisa.innerHTML = '';
+
         // Verificar se a resposta é um array
         if (Array.isArray(data)) {
             console.log(`Produtos carregados: ${data.length}`); // Log para depuração
@@ -88,6 +105,7 @@ async function carregarProdutosCatalogo(containerId, nome = '') {
                 itensDePesquisa?.classList.add('visually-hidden');
             } else {
                 alertaPesquisa?.classList.add('visually-hidden');
+                produtosGlobal = data; // Armazena os produtos na variável global
                 adicionarCards(data, containerId);
             }
         } else if (Array.isArray(data.content)) {
@@ -98,7 +116,10 @@ async function carregarProdutosCatalogo(containerId, nome = '') {
                 itensDePesquisa?.classList.add('visually-hidden');
             } else {
                 alertaPesquisa?.classList.add('visually-hidden');
+                produtosGlobal = data.content; // Armazena os produtos na variável global
+                totalPaginas = data.totalPages; // Armazena o número total de páginas
                 adicionarCards(data.content, containerId);
+                atualizarPaginacao();
             }
         } else {
             console.error('A resposta não contém um array de produtos.');
@@ -114,9 +135,38 @@ async function carregarProdutosCatalogo(containerId, nome = '') {
     }
 }
 
+// Função para ordenar os produtos
+function ordenarProdutos(ordenacao) {
+    let produtosOrdenados = [...produtosGlobal];
+    if (ordenacao === '1') {
+        produtosOrdenados.sort((a, b) => a.preco - b.preco);
+    } else if (ordenacao === '2') {
+        produtosOrdenados.sort((a, b) => b.preco - a.preco);
+    }
+    adicionarCards(produtosOrdenados, 'itensContainer');
+}
+
+// Função para atualizar os botões de paginação
+function atualizarPaginacao() {
+    const paginacaoContainer = document.querySelector('.btn-toolbar .btn-group');
+    paginacaoContainer.innerHTML = ''; // Limpa os botões de paginação
+
+    for (let i = 0; i < totalPaginas; i++) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn btn-outline-secondary';
+        button.textContent = i + 1;
+        button.addEventListener('click', function() {
+            paginaAtual = i;
+            carregarProdutosCatalogo('itensContainer', '', paginaAtual);
+        });
+        paginacaoContainer.appendChild(button);
+    }
+}
+
 // Chamar a função para carregar os produtos quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
-    carregarProdutosCatalogo('itensContainer');
+    carregarProdutosCatalogo('itensContainer', '', paginaAtual);
 
     // Adicionar evento de escuta à barra de pesquisa
     const searchBar = document.getElementById('searchBar');
@@ -132,7 +182,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             itensContainer?.classList.remove('visually-hidden');
             itensDePesquisa?.classList.add('visually-hidden');
+            carregarProdutosCatalogo('itensContainer', '', paginaAtual); // Recarregar todos os produtos
         }
+    });
+
+    // Adicionar evento de escuta ao botão de ordenação
+    document.querySelector('.btn-outline-secondary').addEventListener('click', function() {
+        const ordenacao = document.getElementById('inputGroupSelect04').value;
+        ordenarProdutos(ordenacao);
     });
 });
 

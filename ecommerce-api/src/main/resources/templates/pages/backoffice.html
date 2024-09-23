@@ -12,14 +12,48 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     </head>
     <body data-bs-theme="dark">
+        <nav class="py-2 bg-body-tertiary border-bottom">
+            <div class="container d-flex flex-wrap">
+                <ul class="nav me-auto">
+                    <li class="nav-item"><a href="/" class="nav-link link-body-emphasis px-2 active" aria-current="page">Home</a></li>
+                    <li class="nav-item"><a href="/catalog" class="nav-link link-body-emphasis px-2">Catalogo</a></li>
+                    <li class="nav-item d-none d-sm-inline"><a href="/faq" class="nav-link link-body-emphasis px-2">FAQs</a></li>
+                    <li class="nav-item d-none d-sm-inline"><a href="#" class="nav-link link-body-emphasis px-2">About</a></li>
+                </ul>
+                <ul class="nav logged-out">
+                    <li class="nav-item"><button type="button" class="btn btn-secondary ms-3 mx-3" onclick="window.location.href='/login'">Login</button></li>
+                    <li class="nav-item"><button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/signup'">Sign up</button></button></li>
+                </ul>
+                <ul class="nav logged-in d-flex align-items-center visually-hidden">
+                    <div class="dropdown text-end z-2 ">
+                        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://i.pinimg.com/564x/91/9a/4a/919a4aa404d9aff95dcbf0079396e321.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small">
+                            <li><a class="dropdown-item" href="/profile">Perfil</a></li>
+                            <li><a class="dropdown-item" href="/backoffice">Backoffice</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item logout-button" href="">Sair</a></li>
+                        </ul>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <li class="nav-item d-none d-sm-inline">
+                        <a href="/cart" class="nav-link link-body-emphasis px-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
+                                <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
         <header class="py-3 mb-4 border-bottom">
             <div class="container d-flex flex-wrap justify-content-center">
-                <a href="/"
-                    class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32">
-                        <use xlink:href="#bootstrap"></use>
-                    </svg>
-                    <span class="fs-4">Backoffice</span>
+                <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
+                    <i class="bi bi-building-fill-gear"></i>
+                    <span class="ms-3 fs-5">Backoffice</span>
                 </a>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
                     <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
@@ -60,24 +94,16 @@
                                                     Produtos
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="" class="nav-link text-white">
-                                                    <svg class="bi pe-none me-2" width="16" height="16">
-                                                        <use xlink:href="#speedometer2"></use>
-                                                    </svg>
-                                                    Sair
-                                                </a>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>                      
 
                         <!-- Coluna 2 -->
                         <div class="col-lg-9">
                             <div class="mb-4 card">
-                                <div class="card-body" id="itensContainer" style="min-height: 522px;">
+                                <div class="card-body" id="itensContainer" style="min-height: 736px;">
                                     <!-- Conteúdo Principal -->
                                     <div class="container mt-1">
                                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -92,9 +118,9 @@
                                                     <th>ID</th>
                                                     <th>Nome</th>
                                                     <th>Email</th>
-                                                    <th>Status</th>
                                                     <th>Grupo</th>
-                                                    <th>Opções</th>
+                                                    <th>Status</th>
+                                                    <th>Editar</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -103,7 +129,7 @@
                                         </table>
 
                                         <!-- Tabela de Produtos (oculta inicialmente) -->
-                                        <table class="table table-bordered table-hover d-none" id="tabelaProdutos">
+                                        <table class="table table-bordered table-hover d-none" id="tabelaProdutos" >
                                             <thead>
                                                 <tr>
                                                     <th>Código</th>
@@ -118,6 +144,15 @@
                                                 <!-- Conteúdo será preenchido via JavaScript -->
                                             </tbody>
                                         </table>
+                                        <!-- marcador de pagina -->
+                                        <div id="paginas123" class="btn-toolbar mb-1 d-flex justify-content-around d-none" role="toolbar" aria-label="Toolbar with button groups">
+                                            <div class="btn-group me-2" role="group" aria-label="First group">
+                                                <button type="button" class="btn btn-outline-secondary">1</button>
+                                                <button type="button" class="btn btn-outline-secondary">2</button>
+                                                <button type="button" class="btn btn-outline-secondary">3</button>
+                                                <button type="button" class="btn btn-outline-secondary">4</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -175,45 +210,61 @@
                 </div>
             </div>
         </footer>
-        
         <!-- Modal Cadastro de Usuário -->
-        <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade" id="modalUsuario" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+            aria-labelledby="modalUsuarioLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalUsuarioLabel">Cadastrar Novo Usuário</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="formCadastroUsuario">
                             <div class="mb-3">
                                 <label for="nomeUsuario" class="form-label">Nome do Usuário</label>
                                 <input type="text" class="form-control" id="nomeUsuario" placeholder="Nome">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cpfUsuario" class="form-label">CPF</label>
+                                <input type="text" class="form-control" id="cpfUsuario" placeholder="CPF">
                             </div>
                             <div class="mb-3">
                                 <label for="emailUsuario" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="emailUsuario" placeholder="Email">
                             </div>
                             <div class="mb-3">
-                                <label for="statusUsuario" class="form-label">Status</label>
-                                <select class="form-control" id="statusUsuario">
-                                    <option>Ativo</option>
-                                    <option>Inativo</option>
+                                <label for="grupoUsuario" class="form-label">Grupo</label>
+                                <select class="form-control" id="grupoUsuario">
+                                    <option value="ADMINISTRADOR">Administrador</option>
+                                    <option value="ESTOQUISTA">Estoquista</option>
                                 </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="senhaUsuario" class="form-label">Senha</label>
+                                <input type="password" class="form-control" id="senhaUsuario" placeholder="Senha">
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmarSenhaUsuario" class="form-label">Confirmar Senha</label>
+                                <input type="password" class="form-control" id="confirmarSenhaUsuario"
+                                    placeholder="Confirmar Senha">
+                            </div>
                         </form>
+                        <div class="alert alert-danger d-flex justify-content-center mt-4 visually-hidden" role="alert">
+                            <strong>erro</strong>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary">Salvar</button>
+                        <button type="button" class="btn btn-primary" id="salvarUsuario">Salvar</button>
                     </div>
-                </div>
+                </div>                
             </div>
         </div>
 
         <!-- Modal Cadastro de Produto -->
-        <div class="modal fade" id="modalProduto" tabindex="-1" aria-labelledby="modalProdutoLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade" id="modalProduto" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalProdutoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalProdutoLabel">Cadastrar Novo Produto</h5>
@@ -249,94 +300,41 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal de Confirmação -->
+        <div class="modal fade" id="confirmacaoModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="confirmacaoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmacaoModalLabel">Confirmação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="confirmacaoMensagem"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="confirmarAcao">Sim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/static/vendor/javascript/Backoffice.js"></script>
+        <script src="/static/vendor/javascript/common.js"></script>
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                async function carregarUsuarios() {
-                    try {
-                        const response = await fetch('http://localhost:8080/api/usuarios');
-                        if (!response.ok) {
-                            throw new Error('Erro ao buscar usuários');
-                        }
-                        const usuarios = await response.json();
-                        preencherTabelaUsuarios(usuarios);
-                    } catch (error) {
-                        console.error('Erro:', error);
-                    }
+            function abrirModal() {
+                const tituloTabela = document.getElementById('tituloTabela').innerText;
+
+                if (tituloTabela === 'Usuários') {
+                    const modalUsuario = new bootstrap.Modal(document.getElementById('modalUsuario'));
+                    modalUsuario.show();
+                } else if (tituloTabela === 'Produtos') {
+                    const modalProduto = new bootstrap.Modal(document.getElementById('modalProduto'));
+                    modalProduto.show();
                 }
-
-                async function carregarProdutos() {
-                    try {
-                        const response = await fetch('http://localhost:8080/api/produtos?page=0&size=10');
-                        if (!response.ok) {
-                            throw new Error('Erro ao buscar produtos');
-                        }
-                        const produtos = await response.json();
-                        preencherTabelaProdutos(produtos.content);
-                    } catch (error) {
-                        console.error('Erro:', error);
-                    }
-                }
-
-                function preencherTabelaUsuarios(usuarios) {
-                    const tabelaUsuarios = document.getElementById('tabelaUsuarios').getElementsByTagName('tbody')[0];
-                    tabelaUsuarios.innerHTML = ''; // Limpa a tabela antes de preencher
-
-                    usuarios.forEach(usuario => {
-                        const row = tabelaUsuarios.insertRow();
-                        row.insertCell(0).innerText = usuario.id;
-                        row.insertCell(1).innerText = usuario.nome;
-                        row.insertCell(2).innerText = usuario.email;
-                        row.insertCell(3).innerText = usuario.ativo ? 'Ativo' : 'Inativo';
-                        row.insertCell(4).innerText = usuario.grupo;
-                        row.insertCell(5).innerHTML = `
-                            <button class="btn btn-outline-light">Alterar</button>
-                            <button class="btn btn-outline-light">Visualizar</button>
-                        `;
-                    });
-                }
-
-                function preencherTabelaProdutos(produtos) {
-                    const tabelaProdutos = document.getElementById('tabelaProdutos').getElementsByTagName('tbody')[0];
-                    tabelaProdutos.innerHTML = ''; // Limpa a tabela antes de preencher
-
-                    produtos.forEach(produto => {
-                        const row = tabelaProdutos.insertRow();
-                        row.insertCell(0).innerText = produto.id;
-                        row.insertCell(1).innerText = produto.nome;
-                        row.insertCell(2).innerText = produto.quantidadeEmEstoque;
-                        row.insertCell(3).innerText = produto.preco;
-                        row.insertCell(4).innerText = produto.ativo ? 'Ativo' : 'Inativo';
-                        row.insertCell(5).innerHTML = `
-                            <button class="btn btn-outline-light">Alterar</button>
-                            <button class="btn btn-outline-light">Visualizar</button>
-                        `;
-                    });
-                }
-
-                function showUsuarios() {
-                    document.getElementById('tabelaUsuarios').classList.remove('d-none');
-                    document.getElementById('tabelaProdutos').classList.add('d-none');
-                    document.getElementById('tituloTabela').innerText = 'Usuários';
-                    document.getElementById('botaoNovo').innerText = '+ Novo Usuário';
-                    carregarUsuarios();
-                }
-
-                function showProdutos() {
-                    document.getElementById('tabelaUsuarios').classList.add('d-none');
-                    document.getElementById('tabelaProdutos').classList.remove('d-none');
-                    document.getElementById('tituloTabela').innerText = 'Produtos';
-                    document.getElementById('botaoNovo').innerText = '+ Novo Produto';
-                    carregarProdutos();
-                }
-
-                window.showUsuarios = showUsuarios;
-                window.showProdutos = showProdutos;
-
-                // Carregar usuários automaticamente ao carregar a página
-                carregarUsuarios();
-            });
+            }
         </script>
     </body>
 </html>
