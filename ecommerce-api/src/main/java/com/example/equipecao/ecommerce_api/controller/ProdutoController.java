@@ -1,3 +1,12 @@
+/*
+ * Classe responsável por controlar as requisições de produtos.
+ * 
+ * Aqui são definidos os endpoints para buscar, criar, atualizar, atualizar 
+ * o status do produto e deletar produtos.
+ * Além disso, é possível buscar produtos por nome, categoria e distribuidor.
+ * 
+*/ 
+
 package com.example.equipecao.ecommerce_api.controller;
 
 import com.example.equipecao.ecommerce_api.model.Categoria;

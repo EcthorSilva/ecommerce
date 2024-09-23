@@ -1,3 +1,14 @@
+/*
+ * Classe responsável por controlar as requisições de autenticação.
+ * 
+ * Aqui são definidos os endpoints para login, logout e informações do usuário.
+ * 
+ * O login é feito através do método POST, onde é feita a autenticação do usuário.
+ * O logout é feito através do método POST, onde a sessão do usuário é invalidada.
+ * As informações do usuário são retornadas através do método GET.
+ * 
+*/
+
 package com.example.equipecao.ecommerce_api.controller;
 
 import com.example.equipecao.ecommerce_api.model.Usuario;
@@ -17,9 +28,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
 @RestController
-@RequestMapping("/api/auth")
-public class AuthController {
+@RequestMapping("/api/auth") // Define o caminho base para a URL de todos os endpoints
+public class AuthController { 
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -27,6 +39,7 @@ public class AuthController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // Método para realizar o login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario loginRequest, HttpServletRequest request) {
         try {
@@ -51,6 +64,7 @@ public class AuthController {
         }
     }
 
+    // Método para realizar o logout
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -60,6 +74,7 @@ public class AuthController {
         return ResponseEntity.ok("{\"message\": \"Logout realizado com sucesso\"}");
     }
 
+    // Método para retornar informações do usuário logado
     @GetMapping("/me")
     public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

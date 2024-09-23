@@ -1,3 +1,7 @@
+/* 
+ * Classe que implementa um validador de CPF.
+*/
+
 package com.example.equipecao.ecommerce_api.util;
 
 public class CPFValidator {

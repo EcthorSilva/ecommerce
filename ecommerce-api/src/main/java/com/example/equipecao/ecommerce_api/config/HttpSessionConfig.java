@@ -1,3 +1,10 @@
+/* 
+ * Classe de configuração para a sessão do usuário
+ * esta classe é responsável por configurar o tempo de expiração da sessão e o DataSource para armazenar as sessões
+ * no banco de dados.
+ *  
+*/
+
 package com.example.equipecao.ecommerce_api.config;
 
 import com.zaxxer.hikari.HikariDataSource;

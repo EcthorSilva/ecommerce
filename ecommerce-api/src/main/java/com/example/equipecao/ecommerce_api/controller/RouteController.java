@@ -1,3 +1,11 @@
+/*
+ * Classe que controla as rotas da aplicação
+ * 
+ * Aqui são definidas as rotas para as páginas da aplicação.
+ * Todas as paginas são retornadas com o nome da pasta onde estão localizadas
+ * exemplo: "pages/login" retorna a pagina login.html que está na pasta pages
+*/
+
 package com.example.equipecao.ecommerce_api.controller;
 
 import org.springframework.stereotype.Controller;

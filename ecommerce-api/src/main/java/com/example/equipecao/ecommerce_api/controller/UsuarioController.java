@@ -1,3 +1,11 @@
+/* 
+ * Controller responsável por gerenciar as requisições relacionadas a usuários.
+ * 
+ * Aqui são definidos os endpoints para buscar, criar, atualizar, deletar e atualizar o status de usuários.
+ * Além disso, é possível buscar usuários por id.
+ * 
+*/
+
 package com.example.equipecao.ecommerce_api.controller;
 
 import com.example.equipecao.ecommerce_api.model.Usuario;
@@ -31,6 +39,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
+    // Criar um novo usuario
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody Usuario usuario) {
         if (!isValidEmail(usuario.getEmail())) {
@@ -50,6 +59,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso.");
     }
 
+    // Buscar usuario por id
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> findById(@PathVariable long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
@@ -60,6 +70,7 @@ public class UsuarioController {
         }
     }
 
+    // Atualizar usuario
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable long id, @Valid @RequestBody Usuario usuario) {
         if (!usuarioRepository.existsById(id)) {
@@ -70,6 +81,7 @@ public class UsuarioController {
         return ResponseEntity.ok("Usuário atualizado com sucesso.");
     }
 
+    // Deletar usuario
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
         if (!usuarioRepository.existsById(id)) {
@@ -79,6 +91,7 @@ public class UsuarioController {
         return ResponseEntity.ok("Usuário deletado com sucesso.");
     }
 
+    // Atualizar status
     @PatchMapping("/{id}/status")
     public ResponseEntity<String> updateStatus(@PathVariable long id, @RequestParam boolean ativo) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
@@ -91,6 +104,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
     }
 
+    // Verifica se o email é válido
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pat = Pattern.compile(emailRegex);

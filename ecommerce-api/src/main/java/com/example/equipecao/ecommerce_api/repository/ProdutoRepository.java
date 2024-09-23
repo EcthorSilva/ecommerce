@@ -1,3 +1,9 @@
+/* 
+ * Classe que representa o repositório de produtos
+ * 
+ * Esta classe é responsável por realizar operações de busca, inserção, atualização e remoção de produtos no banco de dados.
+*/
+
 package com.example.equipecao.ecommerce_api.repository;
 
 import com.example.equipecao.ecommerce_api.model.Categoria;

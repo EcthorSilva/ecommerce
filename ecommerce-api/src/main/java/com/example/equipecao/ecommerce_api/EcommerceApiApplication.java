@@ -1,3 +1,7 @@
+/* 
+ * Classe principal da aplicação, responsável por iniciar a aplicação Spring Boot.
+*/
+
 package com.example.equipecao.ecommerce_api;
 
 import org.springframework.boot.SpringApplication;

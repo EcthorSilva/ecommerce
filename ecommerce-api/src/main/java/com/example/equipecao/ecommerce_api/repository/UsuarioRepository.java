@@ -1,3 +1,7 @@
+/* 
+ * Interface que extende JpaRepository, que é uma interface de persistência do Spring Data JPA.
+*/
+
 package com.example.equipecao.ecommerce_api.repository;
 
 import com.example.equipecao.ecommerce_api.model.Usuario;

@@ -1,3 +1,12 @@
+/* 
+ * Configuração de segurança da aplicação
+ * 
+ * Esta classe é responsável por configurar a segurança da aplicação, definindo as regras de acesso e autenticação,
+ * aqui são definidos os endpoints públicos e privados, bem como as configurações de autenticação e autorização,
+ * além disso, são definidos os handlers de sucesso e falha de autenticação, e de logout.
+ * 
+*/
+
 package com.example.equipecao.ecommerce_api.config;
 
 import com.example.equipecao.ecommerce_api.service.CustomUserDetailsService;
@@ -46,13 +55,14 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // Configuração de segurança
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable()) // Desabilitar CSRF para testes
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/signup","/backoffice-login", "/catalog", "/faq", "/api/produtos", "/api/produtos/search", "/api/produtos/distribuidor/**", "/api/usuarios", "/static/vendor/**").permitAll() // Permitir acesso público à página de login, arquivos estáticos e etc
-                .requestMatchers("/backoffice", "/profile", "/api/auth/me").authenticated() // Requer autenticação para acessar o backoffice
+                .requestMatchers("/backoffice", "/profile", "/api/auth/me").authenticated() // Requer autenticação para acessar o backoffice, profile e etc
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -88,7 +98,7 @@ public class SecurityConfig {
 
         return http.build();
     }
-
+    // Handlers de sucesso e falha de autenticação
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
@@ -100,7 +110,7 @@ public class SecurityConfig {
             writer.close();
         };
     }
-
+    // Handlers de unauthenticated e forbidden
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new SimpleUrlAuthenticationFailureHandler() {
@@ -115,7 +125,7 @@ public class SecurityConfig {
             }
         };
     }
-
+    // Handler de sucesso de logout
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new SimpleUrlLogoutSuccessHandler() {

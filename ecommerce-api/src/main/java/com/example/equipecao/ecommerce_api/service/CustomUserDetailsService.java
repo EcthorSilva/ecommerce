@@ -1,3 +1,10 @@
+/* 
+ * Classe que implementa a interface UserDetailsService do Spring Security
+ * 
+ * Esta classe é responsável por carregar um usuário a partir do seu email
+ * 
+*/
+
 package com.example.equipecao.ecommerce_api.service;
 
 import com.example.equipecao.ecommerce_api.model.Usuario;

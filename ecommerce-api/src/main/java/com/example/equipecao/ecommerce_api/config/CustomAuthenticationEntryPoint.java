@@ -1,3 +1,8 @@
+/* 
+ * Classe que implementa a interface AuthenticationEntryPoint, que é usada para lidar com exceções de autenticação.
+ * 
+ */
+
 package com.example.equipecao.ecommerce_api.config;
 
 import jakarta.servlet.ServletException;
