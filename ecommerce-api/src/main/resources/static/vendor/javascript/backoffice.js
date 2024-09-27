@@ -2,11 +2,9 @@
 * TO DO: 
 * 
 * - Usuarios
-* 1. colocar o modal com o id confirmacaoModal da pagina backoffice.html 
-*    para confirmar a ativação/desativação do usuario;
-* 2. colocar uma validação para que o usuario logado não consiga desativar 
+* 1. colocar uma validação para que o usuario logado não consiga desativar 
 *    ele mesmo (endpoint /api/auth/me verifica o usuario logado);
-* 3. fazer com que o botão de editar pegue as informações do usuario e coloque no modal para edição.
+* 2. (incompleto) fazer com que o botão de editar pegue as informações do usuario e coloque no modal para edição.
 *
 * - Produtos
 * 1. colocar o modal de cadastro de produtos para funcionar, junto com a opção de adicionar
@@ -17,6 +15,8 @@
 */ 
 
 document.addEventListener("DOMContentLoaded", function () {
+    let usuarioSelecionado = null;
+
     let paginaAtual = 0;
     let totalPaginas = 0;
 
@@ -65,8 +65,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             `;
             row.insertCell(5).innerHTML = `
-                <button class="btn btn-outline-light">Editar</button>
+                <button class="btn btn-outline-light editarUsuario" data-id="${usuario.id}">Editar</button>
             `;
+
+            // Adiciona evento de clique ao botão "Editar"
+            const editarBtn = row.querySelector(".editarUsuario");
+            editarBtn.addEventListener("click", function () {
+                abrirModalEdicao(usuario);
+            });
 
             // Adiciona evento de clique ao switch
             const switchElement = row.querySelector(`#statusSwitch${usuario.id}`);
@@ -78,6 +84,88 @@ document.addEventListener("DOMContentLoaded", function () {
                 exibirModalConfirmacao(usuario.ativo);
             });
         });
+    }
+
+    function abrirModalEdicao(usuario) {
+        usuarioSelecionado = usuario;
+        document.getElementById("usuarioId").value = usuario.id;
+        document.getElementById("nomeUsuario").value = usuario.nome;
+        document.getElementById("cpfUsuario").value = usuario.cpf;
+        document.getElementById("emailUsuario").value = usuario.email;
+        document.getElementById("grupoUsuario").value = usuario.grupo;
+        document.getElementById("senhaUsuario").value = "";
+        document.getElementById("confirmarSenhaUsuario").value = "";
+
+        const modalUsuario = new bootstrap.Modal(document.getElementById("modalUsuario"));
+        modalUsuario.show();
+    }
+
+    document.getElementById("salvarUsuario").addEventListener("click", async function () {
+        const id = document.getElementById("usuarioId").value;
+        const nome = document.getElementById("nomeUsuario").value;
+        const cpf = document.getElementById("cpfUsuario").value;
+        const email = document.getElementById("emailUsuario").value;
+        const grupo = document.getElementById("grupoUsuario").value;
+        const senha = document.getElementById("senhaUsuario").value;
+        const confirmarSenha = document.getElementById("confirmarSenhaUsuario").value;
+
+        if (!nome || !cpf || !email || !grupo || (!id && (!senha || !confirmarSenha))) {
+            exibirErro("Todos os campos são obrigatórios.");
+            return;
+        }
+
+        if (!validarEmail(email)) {
+            exibirErro("Email inválido.");
+            return;
+        }
+
+        if (!validarCPF(cpf)) {
+            exibirErro("CPF inválido.");
+            return;
+        }
+
+        if (senha !== confirmarSenha) {
+            exibirErro("As senhas não coincidem.");
+            return;
+        }
+
+        const dados = {
+            id: id ? parseInt(id) : undefined,
+            nome: nome,
+            cpf: cpf,
+            email: email,
+            senha: senha ? btoa(senha) : undefined, // Simulação de criptografia, substitua por uma real
+            grupo: grupo,
+            ativo: true
+        };
+
+        if (id) {
+            await atualizarUsuario(dados);
+        } else {
+            await registrarUsuario(dados);
+        }
+    });
+
+    async function atualizarUsuario(dados) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/usuarios/${dados.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dados)
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar usuário');
+            }
+
+            localStorage.setItem('showUserToast', 'true');
+            location.reload();
+        } catch (error) {
+            console.error('Erro:', error);
+            exibirErro('Erro ao atualizar usuário');
+        }
     }
 
     function exibirModalConfirmacao(ativo) {

@@ -210,6 +210,7 @@
                 </div>
             </div>
         </footer>
+        
         <!-- Modal Cadastro de Usuário -->
         <div class="modal fade" id="modalUsuario" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
             aria-labelledby="modalUsuarioLabel" aria-hidden="true">
@@ -221,6 +222,7 @@
                     </div>
                     <div class="modal-body">
                         <form id="formCadastroUsuario">
+                            <input type="hidden" id="usuarioId">
                             <div class="mb-3">
                                 <label for="nomeUsuario" class="form-label">Nome do Usuário</label>
                                 <input type="text" class="form-control" id="nomeUsuario" placeholder="Nome">
@@ -258,7 +260,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-primary" id="salvarUsuario">Salvar</button>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
 
@@ -329,25 +331,6 @@
                 </div>
                 <div class="toast-body">
                     Usuário cadastrado com sucesso!
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Confirmação -->
-        <div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-labelledby="confirmacaoModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmacaoModalLabel">Confirmação</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="confirmacaoMensagem"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="confirmarAcao">Confirmar</button>
-                    </div>
                 </div>
             </div>
         </div>
