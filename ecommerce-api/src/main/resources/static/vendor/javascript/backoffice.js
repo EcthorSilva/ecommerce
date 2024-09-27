@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let paginaAtual = 0;
     let totalPaginas = 0;
 
+    let estadoOriginalSwitch = null;
+    let switchElementAtual = null;
+
     async function carregarUsuarios() {
         try {
             const response = await fetch('http://localhost:8080/api/usuarios');
@@ -68,10 +71,40 @@ document.addEventListener("DOMContentLoaded", function () {
             // Adiciona evento de clique ao switch
             const switchElement = row.querySelector(`#statusSwitch${usuario.id}`);
             switchElement.addEventListener('change', function () {
-                atualizarStatusUsuario(usuario.id, switchElement.checked);
+                usuarioIdParaAtualizar = usuario.id;
+                novoStatusUsuario = switchElement.checked;
+                estadoOriginalSwitch = !novoStatusUsuario; // Armazena o estado original
+                switchElementAtual = switchElement; // Armazena o elemento atual do switch
+                exibirModalConfirmacao(usuario.ativo);
             });
         });
     }
+
+    function exibirModalConfirmacao(ativo) {
+        const mensagem = ativo ? 'Deseja desativar este usuário?' : 'Deseja ativar este usuário?';
+        document.getElementById('confirmacaoMensagem').innerText = mensagem;
+        const confirmacaoModal = new bootstrap.Modal(document.getElementById('confirmacaoModal'));
+        confirmacaoModal.show();
+    }
+
+    document.getElementById('confirmarAcao').addEventListener('click', async function () {
+        if (usuarioIdParaAtualizar !== null && novoStatusUsuario !== null) {
+            await atualizarStatusUsuario(usuarioIdParaAtualizar, novoStatusUsuario);
+            usuarioIdParaAtualizar = null;
+            novoStatusUsuario = null;
+            const confirmacaoModal = bootstrap.Modal.getInstance(document.getElementById('confirmacaoModal'));
+            confirmacaoModal.hide();
+        }
+    });
+
+    // Adiciona evento de clique ao botão de cancelar do modal
+    document.querySelector('#confirmacaoModal .btn-secondary').addEventListener('click', function () {
+        if (switchElementAtual !== null && estadoOriginalSwitch !== null) {
+            switchElementAtual.checked = estadoOriginalSwitch; // Restaura o estado original do switch
+            switchElementAtual = null;
+            estadoOriginalSwitch = null;
+        }
+    });
 
     async function atualizarStatusUsuario(id, status) {
         try {
