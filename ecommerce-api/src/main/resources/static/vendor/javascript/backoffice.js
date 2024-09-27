@@ -193,15 +193,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify(dados)
             });
+    
             if (!response.ok) {
                 throw new Error('Erro ao cadastrar usuário');
             }
-            alert('Usuário cadastrado com sucesso!');
+    
+            // Definir no localStorage que o toast deve ser exibido após recarregar a página
+            localStorage.setItem('showUserToast', 'true');
+    
+            // Recarregar a página para atualizar as informações
             location.reload();
+    
         } catch (error) {
             console.error('Erro:', error);
             exibirErro('Erro ao cadastrar usuário');
         }
+    }    
+
+    // Verificar se deve exibir o toast
+    if (localStorage.getItem('showUserToast') === 'true') {
+        var toastEl = document.getElementById('userToast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+
+        // Remover o valor do localStorage para não exibir novamente
+        localStorage.removeItem('showUserToast');
     }
 
     document.getElementById("salvarUsuario").addEventListener("click", async function () {
