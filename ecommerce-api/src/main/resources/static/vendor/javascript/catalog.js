@@ -56,7 +56,7 @@ function adicionarCards(produtos, containerId) {
             <div class="card">
                 <img src="${produto.imgUrl}" alt="Imagem do Produto" class="card-img-top">
                 <div class="card-body">
-                    <h5 class="card-title">${produto.nome}</h5>
+                    <h5 class="card-title text-truncate">${produto.nome}</h5>
                     ${getCategoriaIcon(produto.categoria)}&nbsp;
                     <div class="position-absolute bottom-0 end-0 p-2">
                         ${produto.temDesconto ? `
