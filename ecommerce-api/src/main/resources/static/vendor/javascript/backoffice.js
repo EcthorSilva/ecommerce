@@ -122,16 +122,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Alterar o status do usuário
     async function atualizarStatusUsuario(id, status) {
-        try {
-            const response = await fetch(`http://localhost:8080/api/usuarios/${id}/status?ativo=${status}`, {
-                method: 'PATCH'
-            });
-            if (!response.ok) {
-                throw new Error('Erro ao atualizar status do usuário');
+        if (id === usuarioLogadoId) {
+            exibirErroToast('Você não pode desativar o seu próprio usuário');
+            switchElementAtual.checked = estadoOriginalSwitch; // Restaura o estado original do switch
+        }else{
+            try {
+                const response = await fetch(`http://localhost:8080/api/usuarios/${id}/status?ativo=${status}`, {
+                    method: 'PATCH'
+                });
+                if (!response.ok) {
+                    throw new Error('Erro ao atualizar status do usuário');
+                }
+                carregarUsuarios(); // Recarrega a tabela de usuários
+            } catch (error) {
+                console.error('Erro:', error);
             }
-            carregarUsuarios(); // Recarrega a tabela de usuários
-        } catch (error) {
-            console.error('Erro:', error);
         }
     }
     // Modal para confirmar a alteração do status do usuario
@@ -231,9 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Carregar usuários automaticamente ao carregar a página
     carregarUsuarios();
+    // obtem o usuario logado
+    obterUsuarioLogado();
 
     /* Alertas e erros */ 
-
     // Função para exibir mensagem de erro na div de alerta
     function exibirErro(mensagem) {
         var errorDiv = document.querySelector('.alert-danger');
@@ -252,9 +258,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Remover o valor do localStorage para não exibir novamente
         localStorage.removeItem('showUserToast');
     }
+    // error toast
+    function exibirErroToast(mensagem) {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        document.querySelector('#errorToast .toast-body').textContent = mensagem;
+        errorToast.show();
+    }
 
     /* Validação */
-
     // Função para validar email
     function validarEmail(email) {
         var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -280,5 +291,26 @@ document.addEventListener('DOMContentLoaded', function() {
     (function () {
         const scriptName = document.currentScript.src.split('/').pop();
         console.log(`${scriptName} carregado com sucesso`);
-    })(); 
+    })();
+    // Função para obter o usuário logado
+    async function obterUsuarioLogado() {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include' // Inclui cookies na requisição
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao obter usuário logado');
+            }
+
+            const data = await response.json();
+            usuarioLogadoId = data.id;
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+    }
 });
