@@ -181,19 +181,74 @@ document.addEventListener('DOMContentLoaded', function() {
     function preencherTabelaProdutos(produtos) {
         const tabelaProdutos = document.getElementById('tabelaProdutos').getElementsByTagName('tbody')[0];
         tabelaProdutos.innerHTML = '';
+        
         produtos.forEach(produto => {
             const row = tabelaProdutos.insertRow();
             row.insertCell(0).innerText = produto.id;
             row.insertCell(1).innerText = produto.nome;
             row.insertCell(2).innerText = produto.quantidadeEmEstoque;
             row.insertCell(3).innerText = produto.preco;
-            row.insertCell(4).innerText = produto.ativo ? 'Ativo' : 'Inativo';
-            row.insertCell(5).innerHTML = `
-                <button class="btn btn-outline-light">Alterar</button>
-                <button class="btn btn-outline-light">Visualizar</button>
+            row.insertCell(4).innerHTML = `
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="statusSwitch${produto.id}" ${produto.ativo ? 'checked' : ''}>
+                    <label class="form-check-label" for="statusSwitch${produto.id}">${produto.ativo ? 'Ativo' : 'Inativo'}</label>
+                </div>
             `;
+            row.insertCell(5).innerHTML = `
+                <button class="btn btn-outline-light">Editar</button>
+            `;
+
+            // Adiciona evento de clique ao switch
+            const switchElement = row.querySelector(`#statusSwitch${produto.id}`);
+            switchElement.addEventListener('change', function () {
+                produtoIdParaAtualizar = produto.id;
+                novoStatusProduto = switchElement.checked;
+                estadoOriginalSwitch = !novoStatusProduto; // Armazena o estado original
+                switchElementAtual = switchElement; // Armazena o elemento atual do switch
+                exibirModalConfirmacaoProduto(produto.ativo);
+            });
         });
     }
+    // alterar status do produto
+    async function atualizarStatusProduto(id, status) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/produtos/${id}/status?ativo=${status}`, {
+                method: 'PATCH'
+            });
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar status do produto');
+            }
+            carregarProdutos(); // Recarrega a tabela de produtos
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+    }
+    // Modal para confirmar a alteração do status do produto
+    function exibirModalConfirmacaoProduto(ativo) {
+        const mensagem = ativo ? 'Deseja desativar este produto?' : 'Deseja ativar este produto?';
+        document.getElementById('confirmacaoMensagemProduto').innerText = mensagem;
+        const confirmacaoModal = new bootstrap.Modal(document.getElementById('confirmacaoModalProduto'));
+        confirmacaoModal.show();
+        // caso aceite
+        document.getElementById('confirmarAcaoProduto').addEventListener('click', async function () {
+            if (produtoIdParaAtualizar !== null && novoStatusProduto !== null) {
+                await atualizarStatusProduto(produtoIdParaAtualizar, novoStatusProduto);
+                produtoIdParaAtualizar = null;
+                novoStatusProduto = null;
+                const confirmacaoModal = bootstrap.Modal.getInstance(document.getElementById('confirmacaoModalProduto'));
+                confirmacaoModal.hide();
+            }
+        });
+        // caso recuse
+        document.querySelector('#confirmacaoModalProduto .btn-secondary').addEventListener('click', function () {
+            if (switchElementAtual !== null && estadoOriginalSwitch !== null) {
+                switchElementAtual.checked = estadoOriginalSwitch; // Restaura o estado original do switch
+                switchElementAtual = null;
+                estadoOriginalSwitch = null;
+            }
+        });
+    }
+
     // paginação da tabela de produtos 
     function atualizarPaginacao() {
         const paginacaoContainer = document.querySelector('.btn-toolbar .btn-group');

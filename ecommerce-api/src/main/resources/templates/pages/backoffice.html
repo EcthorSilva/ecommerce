@@ -132,12 +132,12 @@
                                         <table class="table table-bordered table-hover d-none" id="tabelaProdutos" >
                                             <thead>
                                                 <tr>
-                                                    <th>Código</th>
+                                                    <th>ID</th>
                                                     <th>Nome</th>
                                                     <th>Quantidade</th>
                                                     <th>Valor</th>
                                                     <th>Status</th>
-                                                    <th>Opções</th>
+                                                    <th>Editar</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -317,6 +317,24 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-primary" id="confirmarAcao">Sim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de Confirmação Produto -->
+        <div class="modal fade" id="confirmacaoModalProduto" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="confirmacaoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmacaoModalLabel">Confirmação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="confirmacaoMensagemProduto"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="confirmarAcaoProduto">Sim</button>
                     </div>
                 </div>
             </div>
