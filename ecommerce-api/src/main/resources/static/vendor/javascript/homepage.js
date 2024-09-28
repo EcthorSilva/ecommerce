@@ -36,7 +36,7 @@ function adicionarCards(produtos, containerId) {
             <div class="card">
                 <img src="${produto.imgUrl}" alt="Imagem do Produto" class="card-img-top">
                 <div class="card-body">
-                    <h5 class="card-title">${produto.nome}</h5>
+                    <h5 class="card-title text-truncate">${produto.nome}</h5>
                     ${getCategoriaIcon(produto.categoria)}&nbsp;
                     <div class="position-absolute bottom-0 end-0 p-2">
                         ${produto.temDesconto ? `
@@ -88,7 +88,7 @@ function adicionarCardsMaisVendidos(produtos, containerId) {
                             }
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">${produto.nome}</h5>
+                            <h5 class="card-title text-truncate">${produto.nome}</h5>
                             <p class="card-text">${produto.descricao}</p>
                             <p class="card-text"><small class="text-body-secondary">Última atualização ${produto.ultimaAtualizacao}</small></p>
                         </div>
@@ -112,7 +112,9 @@ async function carregarProdutos(distribuidor, containerId, distribuidorId) {
         
         // Verificar se 'content' é um array
         if (Array.isArray(data.content)) {
-            adicionarCards(data.content, containerId);
+            // Pegar apenas os 4 primeiros produtos
+            const primeirosProdutos = data.content.slice(0, 4);
+            adicionarCards(primeirosProdutos, containerId);
         } else {
             console.error('A resposta não contém um array de produtos.');
         }
