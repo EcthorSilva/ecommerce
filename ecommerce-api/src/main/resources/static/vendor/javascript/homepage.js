@@ -112,7 +112,9 @@ async function carregarProdutos(distribuidor, containerId, distribuidorId) {
         
         // Verificar se 'content' é um array
         if (Array.isArray(data.content)) {
-            adicionarCards(data.content, containerId);
+            // Pegar apenas os 4 primeiros produtos
+            const primeirosProdutos = data.content.slice(0, 4);
+            adicionarCards(primeirosProdutos, containerId);
         } else {
             console.error('A resposta não contém um array de produtos.');
         }
