@@ -12,7 +12,7 @@ function exibirCarrinho() {
         carrinhoContainer.innerHTML += `
             <div class="row mb-3 justify-content-evenly">
                 <div class="col-3">
-                    <img src="${produto.imgurl}" alt="Imagem do Produto" class="w-100 rounded">
+                    <img src="${produto.imgUrl}" alt="Imagem do Produto" class="w-100 rounded">
                 </div>
                 <div class="col-5">
                     <h6 class="pb-0">${produto.nome}</h6>

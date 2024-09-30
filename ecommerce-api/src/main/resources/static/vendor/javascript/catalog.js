@@ -83,9 +83,9 @@ function adicionarCards(produtos, containerId) {
                 nome: this.dataset.nome,
                 categoria: this.dataset.categoria,
                 preco: parseFloat(this.dataset.preco),
-                precoComDesconto: parseFloat(this.dataset.precoComDesconto),
-                temDesconto: this.dataset.temDesconto === 'true',
-                imgUrl: this.dataset.imgUrl
+                precoComDesconto: parseFloat(this.dataset.precocomdesconto), // Alterar para minúsculas
+                temDesconto: this.dataset.temdesconto === 'true', // Alterar para minúsculas
+                imgUrl: this.dataset.imgurl // Alterar para minúsculas
             };
             adicionarAoCarrinho(produto);
         });
