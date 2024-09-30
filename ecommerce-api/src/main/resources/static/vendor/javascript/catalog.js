@@ -1,12 +1,3 @@
-/*
-* TO DO: 
-* 
-* 1- Colocar um filtro para organizar os produtos por preço (mais barato, mais caro e vice-versa);
-* 2- Colocar um filtro para a plataforma, ao selecionar a plataforma, os produtos devem ser filtrados;
-*
-*/ 
-
-
 let produtosGlobal = [];
 let paginaAtual = 0;
 let totalPaginas = 0;
@@ -67,7 +58,14 @@ function adicionarCards(produtos, containerId) {
                         }
                     </div>
                     <br>
-                    <button type="button" class="btn btn-outline-secondary mt-3 ps-3 pe-3">
+                    <button type="button" class="btn btn-outline-secondary mt-3 ps-3 pe-3 btn-adicionar-carrinho" 
+                        data-id="${produto.id}" 
+                        data-nome="${produto.nome}" 
+                        data-categoria="${produto.categoria}" 
+                        data-preco="${produto.preco}" 
+                        data-precoComDesconto="${produto.precoComDesconto}" 
+                        data-temDesconto="${produto.temDesconto}" 
+                        data-imgUrl="${produto.imgUrl}">
                         <i class="bi bi-cart-plus"> adicionar</i>
                     </button>
                 </div>
@@ -76,6 +74,38 @@ function adicionarCards(produtos, containerId) {
 
         row.appendChild(col);
     });
+
+    // Adicionar evento ao botão de adicionar ao carrinho
+    document.querySelectorAll('.btn-adicionar-carrinho').forEach(button => {
+        button.addEventListener('click', function() {
+            let produto = {
+                id: this.dataset.id,
+                nome: this.dataset.nome,
+                categoria: this.dataset.categoria,
+                preco: parseFloat(this.dataset.preco),
+                precoComDesconto: parseFloat(this.dataset.precoComDesconto),
+                temDesconto: this.dataset.temDesconto === 'true',
+                imgUrl: this.dataset.imgUrl
+            };
+            adicionarAoCarrinho(produto);
+        });
+    });
+}
+
+// Função para adicionar produto ao carrinho
+function adicionarAoCarrinho(produto) {
+    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    let itemExistente = carrinho.find(item => item.id === produto.id);
+
+    if (itemExistente) {
+        itemExistente.quantidade += 1;
+    } else {
+        produto.quantidade = 1;
+        carrinho.push(produto);
+    }
+
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    // codigo para acionar uma mensagem toast informando que o produto foi adicionado ao
 }
 
 // Função para fazer a requisição ao endpoint
