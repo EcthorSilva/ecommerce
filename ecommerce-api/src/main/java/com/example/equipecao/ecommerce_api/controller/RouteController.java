@@ -54,4 +54,9 @@ public class RouteController {
     public String signup() {
         return "pages/signup";
     }
+    // rota para a pagina de produto
+    @GetMapping("/product")
+    public String product() {
+        return "pages/product";
+    }
 }
