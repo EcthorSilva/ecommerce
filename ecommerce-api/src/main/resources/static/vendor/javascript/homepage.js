@@ -42,12 +42,19 @@ function adicionarCards(produtos, containerId) {
                         ${produto.temDesconto ? `
                             <h6 class="text-reset bg-dark bg-opacity-75 p-2 rounded" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
                                 R$${produto.precoComDesconto.toFixed(2)} <span class="badge text-bg-danger">-${calcularDesconto(produto.preco, produto.precoComDesconto)}%</span>
-                            </h6>` : 
-                            `<h6 class="text-reset bg-dark bg-opacity-75 p-2 rounded" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">R$${produto.preco.toFixed(2)}</h6>`
-                        }
+                            </h6>` :
+                `<h6 class="text-reset bg-dark bg-opacity-75 p-2 rounded" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">R$${produto.preco.toFixed(2)}</h6>`
+            }
                     </div>
                     <br>
-                    <button type="button" class="btn btn-outline-secondary mt-3 ps-3 pe-3">
+                    <button type="button" class="btn btn-outline-secondary mt-3 ps-3 pe-3 btn-adicionar-carrinho"
+                        data-id="${produto.id}"
+                        data-nome="${produto.nome}"
+                        data-categoria="${produto.categoria}"
+                        data-preco="${produto.preco}"
+                        data-precoComDesconto="${produto.precoComDesconto}"
+                        data-temDesconto="${produto.temDesconto}"
+                        data-imgUrl="${produto.imgUrl}">
                         <i class="bi bi-cart-plus"> adicionar</i>
                     </button>
                 </div>
@@ -55,6 +62,88 @@ function adicionarCards(produtos, containerId) {
         `;
 
         container.appendChild(cardCol);
+    });
+
+    // Adicionar evento ao botão de adicionar ao carrinho
+    document.querySelectorAll('.btn-adicionar-carrinho').forEach(button => {
+        button.addEventListener('click', function() {
+            let produto = {
+                id: this.dataset.id,
+                nome: this.dataset.nome,
+                categoria: this.dataset.categoria,
+                preco: parseFloat(this.dataset.preco),
+                precoComDesconto: parseFloat(this.dataset.precocomdesconto), // Alterar para minúsculas
+                temDesconto: this.dataset.temdesconto === 'true', // Alterar para minúsculas
+                imgUrl: this.dataset.imgurl // Alterar para minúsculas
+            };
+            adicionarAoCarrinho(produto);
+        });
+    });
+}
+
+// Função para adicionar produto ao carrinho
+function adicionarAoCarrinho(produto) {
+    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    
+    // Verifica se o produto já existe no carrinho
+    let itemExistente = carrinho.find(item => item.id === produto.id);
+
+    // Se o produto já existe, não faz nada
+    if (itemExistente) {
+        // alert("Você já adicionou esse produto ao carrinho!");
+    } else {
+        // Se não existe, adiciona o produto com quantidade 1
+        produto.quantidade = 1; 
+        carrinho.push(produto);
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+        
+        // Exibe o toast assim que o produto for adicionado ao carrinho
+        showAddCartToast(produto.nome);
+    }
+}
+
+let toastCount = 0; // Contador de toasts atualmente exibidos
+
+// Função para exibir um toast indicando que o produto foi adicionado ao carrinho
+function showAddCartToast(nomeDoJogo) {
+    // Cria o elemento de toast
+    const toast = document.createElement('div');
+    toast.className = 'toast align-items-center text-bg-success border-0 position-fixed end-0 m-3';
+    toast.style.zIndex = '1055';
+    toast.style.bottom = `${10 + (toastCount * 80)}px`; // Calcula a posição do toast (80px de altura para cada toast)
+    toast.role = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = 'true';
+
+    // Adiciona o conteúdo do toast
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                ${nomeDoJogo} foi adicionado ao carrinho!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    `;
+
+    // Adiciona o toast ao body do documento
+    document.body.appendChild(toast);
+    toastCount++; // Incrementa o contador de toasts visíveis
+
+    // Inicializa o Toast do Bootstrap (certifique-se de que o Bootstrap está incluído no seu projeto)
+    const bootstrapToast = new bootstrap.Toast(toast);
+
+    // Mostra o Toast
+    bootstrapToast.show();
+
+    // Remove o toast do DOM após ele desaparecer
+    toast.addEventListener('hidden.bs.toast', () => {
+        document.body.removeChild(toast);
+        toastCount--; // Decrementa o contador de toasts visíveis
+
+        // Atualiza a posição dos toasts restantes
+        document.querySelectorAll('.toast').forEach((toast, index) => {
+            toast.style.bottom = `${10 + (index * 80)}px`;
+        });
     });
 }
 
