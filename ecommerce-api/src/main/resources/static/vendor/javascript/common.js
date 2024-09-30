@@ -65,6 +65,58 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Evita o comportamento padrão do link
         logout();
     });
+
+    // Atualizar o badge do carrinho
+    function atualizarBadgeCarrinho() {
+        const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+        const quantidadeProdutos = carrinho.length;
+
+        const badge = document.querySelector('.nav-item .badge');
+
+        if (quantidadeProdutos > 0) {
+            badge.textContent = `+${quantidadeProdutos > 99 ? '99' : quantidadeProdutos}`;
+            badge.classList.remove('visually-hidden');
+        } else {
+            badge.classList.add('visually-hidden');
+        }
+    }
+
+    // Chama a função para atualizar o badge quando a página carregar
+    atualizarBadgeCarrinho();
+
+    // Atualiza o badge quando o local storage for alterado
+    window.addEventListener('storage', function (event) {
+        if (event.key === 'carrinho') {
+            atualizarBadgeCarrinho();
+        }
+    });
+
+    // Atualiza o badge ao adicionar ou remover produtos do carrinho na mesma aba
+    function monitorarAlteracoesNoCarrinho() {
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function (key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key === 'carrinho') {
+                atualizarBadgeCarrinho();
+            }
+        };
+
+        const originalRemoveItem = localStorage.removeItem;
+        localStorage.removeItem = function (key) {
+            originalRemoveItem.apply(this, arguments);
+            if (key === 'carrinho') {
+                atualizarBadgeCarrinho();
+            }
+        };
+    }
+
+    monitorarAlteracoesNoCarrinho();
+});
+
+window.addEventListener('storage', function(event) {
+    if (event.key === 'carrinho') {
+        atualizarBadgeCarrinho();
+    }
 });
 
 // validação
