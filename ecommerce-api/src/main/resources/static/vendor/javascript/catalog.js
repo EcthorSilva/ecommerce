@@ -73,6 +73,16 @@ function adicionarCards(produtos, containerId) {
         `;
 
         row.appendChild(col);
+
+        // Adicionar evento de clique para a imagem do produto
+        col.querySelector('.card-img-top').addEventListener('click', function() {
+            redirecionarParaProduto(produto.id);
+        });
+
+        // Adicionar evento de clique para o nome do produto
+        col.querySelector('.card-title').addEventListener('click', function() {
+            redirecionarParaProduto(produto.id);
+        });
     });
 
     // Adicionar evento ao botão de adicionar ao carrinho
@@ -90,6 +100,12 @@ function adicionarCards(produtos, containerId) {
             adicionarAoCarrinho(produto);
         });
     });
+}
+
+// Função para redirecionar para a página do produto
+function redirecionarParaProduto(produtoId) {
+    localStorage.setItem('produtoId', produtoId);
+    window.location.href = '/product'; // Redireciona para product.html
 }
 
 // Função para adicionar produto ao carrinho
@@ -269,7 +285,6 @@ document.addEventListener('DOMContentLoaded', function() {
         ordenarProdutos(ordenacao);
     });
 });
-
 
 // validação
 (function() {
