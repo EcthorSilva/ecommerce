@@ -44,8 +44,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         document.getElementById('produto-nome').textContent = produto.nome;
+        document.getElementById('titulo-produto').textContent = produto.nome + ' | Ecommerce';
         document.getElementById('produto-categoria').textContent = produto.categoria;
         document.getElementById('produto-descricao').textContent = produto.descricaoDetalhada;
+
+        document.getElementById('desenvolvedorNome').textContent = produto.distribuidor;
+        document.getElementById('distribuidorNome').textContent = produto.distribuidor;
 
         // Atualiza a imagem de banner
         const imgBanner = document.querySelector('.img-fluid.border.rounded');
