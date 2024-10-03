@@ -203,8 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Erro ao carregar produtos:', error);
         }
     }
-
-    // Resto do código...
     document.getElementById('barraDePesquisa').addEventListener('input', function () {
         const nomeProduto = this.value.trim();
 
@@ -241,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Erro ao carregar produtos:', error);
         }
     }
-
     // Preencher a tabela de pesquisa
     function preencherTabelaProdutosPesquisa(produtos) {
         const tabelaProdutosPesquisa = document.getElementById('tabelaProdutosPesquisa').getElementsByTagName('tbody')[0];
