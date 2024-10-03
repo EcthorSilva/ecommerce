@@ -34,7 +34,7 @@
                     <span class="ms-3 fs-5">Backoffice</span>
                 </a>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                    <input type="search" id="barraDePesquisa" class="form-control d-none" placeholder="Search..." aria-label="Search">
                 </form>
                 <ul class="nav d-flex align-items-center py-0">
                     <!-- dropdown menu -->
@@ -149,6 +149,29 @@
                                                 <!-- Conteúdo será preenchido via JavaScript -->
                                             </tbody>
                                         </table>
+                                        
+                                        <!-- Tabela de Produtos da Pesquisa (oculta inicialmente) -->
+                                        <table class="table table-bordered table-hover d-none" id="tabelaProdutosPesquisa">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Nome</th>
+                                                    <th>Quantidade</th>
+                                                    <th>Valor</th>
+                                                    <th>Status</th>
+                                                    <th>Editar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Conteúdo será preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+
+                                        <!-- alerta de produto não encontrado -->
+                                        <div class="d-flex justify-content-center my-5 mx-5 d-none" id="alertaPesquisa" role="alert" style="min-height: 942px;">
+                                            <strong>Nenhum produto encontrado.</strong>
+                                        </div>
+                                        
                                         <!-- marcador de pagina -->
                                         <div id="paginas123" class="btn-toolbar mb-1 d-flex justify-content-around d-none" role="toolbar" aria-label="Toolbar with button groups">
                                             <div class="btn-group me-2" role="group" aria-label="First group">
@@ -158,6 +181,7 @@
                                                 <button type="button" class="btn btn-outline-secondary">4</button>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

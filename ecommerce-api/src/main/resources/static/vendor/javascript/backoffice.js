@@ -166,16 +166,103 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /* Produtos */ 
+    // Função para carregar produtos
     async function carregarProdutos(pagina = 0) {
         try {
             const response = await fetch(`/api/produtos?page=${pagina}&size=10`);
             const data = await response.json();
+            console.log('Produtos:', data.content); // Log para exibir o array de produtos
             totalPaginas = data.totalPages;
             preencherTabelaProdutos(data.content);
             atualizarPaginacao();
         } catch (error) {
             console.error('Erro ao carregar produtos:', error);
         }
+    }
+    // Tornar a função carregarProdutosPesquisa globalmente acessível
+    window.carregarProdutosPesquisa = async function carregarProdutosPesquisa(nomeProduto) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/produtos/search?nome=${nomeProduto}`);
+            if (!response.ok) {
+                throw new Error('Erro ao buscar produtos');
+            }
+            const produtos = await response.json();
+            console.log('Produtos da pesquisa:', produtos); // Log para exibir o array de produtos da pesquisa
+
+            if (produtos.length === 0) {
+                document.getElementById('alertaPesquisa').classList.remove('d-none');
+                document.getElementById('tabelaProdutosPesquisa').classList.add('d-none');
+                document.getElementById('tabelaProdutos').classList.add('d-none');
+            } else {
+                preencherTabelaProdutosPesquisa(produtos);
+                document.getElementById('alertaPesquisa').classList.add('d-none');
+                document.getElementById('tabelaProdutosPesquisa').classList.remove('d-none');
+                document.getElementById('tabelaProdutos').classList.add('d-none');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar produtos:', error);
+        }
+    }
+
+    // Resto do código...
+    document.getElementById('barraDePesquisa').addEventListener('input', function () {
+        const nomeProduto = this.value.trim();
+
+        if (nomeProduto === '') {
+            // Se o campo estiver vazio, exibir todos os produtos
+            document.getElementById('tabelaProdutos').classList.remove('d-none');
+            document.getElementById('tabelaProdutosPesquisa').classList.add('d-none');
+            carregarProdutos(); // Carregar todos os produtos
+        } else {
+            // Se houver texto, buscar produtos com o nome especificado
+            carregarProdutosPesquisa(nomeProduto);
+        }
+    });
+    // Função para carregar produtos com base na pesquisa
+    async function carregarProdutosPesquisa(nomeProduto) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/produtos/search?nome=${nomeProduto}`);
+            if (!response.ok) {
+                throw new Error('Erro ao buscar produtos');
+            }
+            const produtos = await response.json();
+
+            if (produtos.length === 0) {
+                document.getElementById('alertaPesquisa').classList.remove('d-none');
+                document.getElementById('tabelaProdutosPesquisa').classList.add('d-none');
+                document.getElementById('tabelaProdutos').classList.add('d-none');
+            } else {
+                preencherTabelaProdutosPesquisa(produtos);
+                document.getElementById('alertaPesquisa').classList.add('d-none');
+                document.getElementById('tabelaProdutosPesquisa').classList.remove('d-none');
+                document.getElementById('tabelaProdutos').classList.add('d-none');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar produtos:', error);
+        }
+    }
+
+    // Preencher a tabela de pesquisa
+    function preencherTabelaProdutosPesquisa(produtos) {
+        const tabelaProdutosPesquisa = document.getElementById('tabelaProdutosPesquisa').getElementsByTagName('tbody')[0];
+        tabelaProdutosPesquisa.innerHTML = '';
+
+        produtos.forEach(produto => {
+            const row = tabelaProdutosPesquisa.insertRow();
+            row.insertCell(0).innerText = produto.id;
+            row.insertCell(1).innerText = produto.nome;
+            row.insertCell(2).innerText = produto.quantidadeEmEstoque;
+            row.insertCell(3).innerText = produto.preco;
+            row.insertCell(4).innerHTML = `
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="statusSwitch${produto.id}" ${produto.ativo ? 'checked' : ''}>
+                <label class="form-check-label" for="statusSwitch${produto.id}">${produto.ativo ? 'Ativo' : 'Inativo'}</label>
+            </div>
+            `;
+                row.insertCell(5).innerHTML = `
+                <button class="btn btn-outline-light">Editar</button>
+            `;
+        });
     }
     // Preenche a tabela de produtos
     function preencherTabelaProdutos(produtos) {
@@ -274,6 +361,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('botaoNovo').innerText = '+ Novo Usuário';
         document.getElementById('paginas123').classList.add('d-none');
 
+        document.getElementById('barraDePesquisa').classList.add('d-none'); // Esconde a barra de pesquisa
+
         carregarUsuarios();
     }
 
@@ -283,6 +372,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('tituloTabela').innerText = 'Produtos';
         document.getElementById('botaoNovo').innerText = '+ Novo Produto';
         document.getElementById('paginas123').classList.remove('d-none');
+
+        document.getElementById('barraDePesquisa').classList.remove('d-none'); // Mostra a barra de pesquisa
 
         carregarProdutos();
     }
@@ -343,11 +434,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (resto === 10 || resto === 11) resto = 0;
         return resto === parseInt(cpf.charAt(10));
     }
-    // Log para indicar que o script foi carregado com sucesso
-    (function () {
-        const scriptName = document.currentScript.src.split('/').pop();
-        console.log(`${scriptName} carregado com sucesso`);
-    })();
     // Função para obter o usuário logado
     async function obterUsuarioLogado() {
         try {
@@ -378,6 +464,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('botaoNovo').innerText = '+ Novo Produto';
                 document.getElementById('paginas123').classList.remove('d-none');
 
+                document.getElementById('barraDePesquisa').classList.remove('d-none'); // Mostra a barra de pesquisa caso o usuario logado seja estoquista
+
                 carregarProdutos();
             } else if (data.grupo === "ADMINISTRADOR") {
                 // Mostra a tabela de usuários por padrão para administradores
@@ -387,4 +475,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Erro:', error);
         }
     }
+    // Log para indicar que o script foi carregado com sucesso
+    (function () {
+        const scriptName = document.currentScript.src.split('/').pop();
+        console.log(`${scriptName} carregado com sucesso`);
+    })();
 });
