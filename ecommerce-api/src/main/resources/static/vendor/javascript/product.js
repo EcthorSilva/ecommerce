@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (produto.temDesconto) {
             const precoComDesconto = produto.precoComDesconto.toFixed(2);
             const porcentagemDesconto = Math.round(((produto.preco - produto.precoComDesconto) / produto.preco) * 100);
-            produtoPreco.innerHTML = `R$${precoComDesconto} <span class="badge text-bg-danger">-${porcentagemDesconto}%</span>`;
+            produtoPreco.innerHTML = `<span class="badge text-bg-danger">-${porcentagemDesconto}%</span> R$${precoComDesconto}`;
             produtoPreco.dataset.preco = produto.preco;
             produtoPreco.dataset.precoComDesconto = produto.precoComDesconto;
             produtoPreco.dataset.temDesconto = 'true';
