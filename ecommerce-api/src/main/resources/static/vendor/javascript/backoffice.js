@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    /* Controle da pagina */
+    // Controle da página (mantém as funções para alternar entre usuários e produtos)
     function showUsuarios() {
         document.getElementById('tabelaUsuarios').classList.remove('d-none');
         document.getElementById('tabelaProdutos').classList.add('d-none');
@@ -283,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('tituloTabela').innerText = 'Produtos';
         document.getElementById('botaoNovo').innerText = '+ Novo Produto';
         document.getElementById('paginas123').classList.remove('d-none');
+
         carregarProdutos();
     }
 
@@ -364,6 +365,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const data = await response.json();
             usuarioLogadoId = data.id;
+
+            // Verifica o grupo do usuário
+            if (data.grupo === "ESTOQUISTA") {
+                // Esconde a opção de usuários no menu lateral
+                document.getElementById('linkUsuarios').classList.add('d-none');
+
+                // Mostra apenas a tabela de produtos
+                document.getElementById('tabelaUsuarios').classList.add('d-none');
+                document.getElementById('tabelaProdutos').classList.remove('d-none');
+                document.getElementById('tituloTabela').innerText = 'Produtos';
+                document.getElementById('botaoNovo').innerText = '+ Novo Produto';
+                document.getElementById('paginas123').classList.remove('d-none');
+
+                carregarProdutos();
+            } else if (data.grupo === "ADMINISTRADOR") {
+                // Mostra a tabela de usuários por padrão para administradores
+                carregarUsuarios();
+            }
         } catch (error) {
             console.error('Erro:', error);
         }
