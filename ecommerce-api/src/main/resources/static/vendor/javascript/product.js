@@ -24,6 +24,34 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+    // Função para obter o ícone da avaliação
+    function getRatingIcon(rating) {
+        switch (rating) {
+            case 'full':
+                return '<i class="bi bi-star-fill fs-5 text-muted"></i>';
+            case 'half':
+                return '<i class="bi bi-star-half fs-5 text-muted"></i>';
+            default:
+                return '<i class="bi bi-star fs-5 text-muted"></i>';
+        }
+    }
+
+    // Função para gerar as estrelas com base na avaliação
+    function generateStars(rating) {
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            if (rating >= i) {
+                starsHtml += `<li class="list-group-item pe-2">${getRatingIcon('full')}</li>`;
+            } else if (rating >= i - 0.5) {
+                starsHtml += `<li class="list-group-item pe-2">${getRatingIcon('half')}</li>`;
+            } else {
+                starsHtml += `<li class="list-group-item pe-2">${getRatingIcon('empty')}</li>`;
+            }
+        }
+        return starsHtml;
+    }
+
+
     // Função para exibir os detalhes do produto na página
     function exibirProduto(produto) {
         const produtoPreco = document.getElementById('produto-preco');
@@ -32,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (produto.temDesconto) {
             const precoComDesconto = produto.precoComDesconto.toFixed(2);
             const porcentagemDesconto = Math.round(((produto.preco - produto.precoComDesconto) / produto.preco) * 100);
-            produtoPreco.innerHTML = `R$${precoComDesconto} <span class="badge text-bg-danger">-${porcentagemDesconto}%</span>`;
+            produtoPreco.innerHTML = `<span class="badge text-bg-danger">-${porcentagemDesconto}%</span> R$${precoComDesconto}`;
             produtoPreco.dataset.preco = produto.preco;
             produtoPreco.dataset.precoComDesconto = produto.precoComDesconto;
             produtoPreco.dataset.temDesconto = 'true';
@@ -44,8 +72,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         document.getElementById('produto-nome').textContent = produto.nome;
+        document.getElementById('titulo-produto').textContent = produto.nome + ' | Ecommerce';
         document.getElementById('produto-categoria').textContent = produto.categoria;
         document.getElementById('produto-descricao').textContent = produto.descricaoDetalhada;
+
+        document.getElementById('desenvolvedorNome').textContent = produto.distribuidor;
+        document.getElementById('distribuidorNome').textContent = produto.distribuidor;
 
         // Atualiza a imagem de banner
         const imgBanner = document.querySelector('.img-fluid.border.rounded');
@@ -87,6 +119,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             carouselItem.appendChild(img);
             carouselInner.appendChild(carouselItem);
         });
+
+        // Atualizar as estrelas de avaliação
+        const ratingStars = document.getElementById('rating-stars');
+        if (ratingStars) {
+            ratingStars.innerHTML = generateStars(produto.avaliacao);
+        } else {
+            console.error("Elemento de avaliação não encontrado");
+        }
     }
 
     const produtoId = getProdutoIdFromLocalStorage();
