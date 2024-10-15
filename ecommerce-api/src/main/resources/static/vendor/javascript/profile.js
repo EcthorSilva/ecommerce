@@ -14,8 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const data = await response.json();
-
             console.log(data);
+
+            // Redireciona para o Backoffice se o grupo não for CLIENTE
+            if (data.grupo !== 'CLIENTE') {
+                window.location.href = '/backoffice';
+                return; // Interrompe a execução para evitar erros
+            }
 
             // Atualiza os elementos HTML com os dados do usuário
             document.querySelector('.userNome').textContent = data.nome;
@@ -31,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     carregarPerfil();
 });
 
-// validação
+// Validação para verificar se o script foi carregado corretamente
 (function() {
     const scriptName = document.currentScript.src.split('/').pop();
     console.log(`${scriptName} carregado com sucesso`);

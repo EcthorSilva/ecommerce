@@ -42,26 +42,52 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password),
         })
-        .then(response => {
-            if (response.ok) {
-                // Sucesso no login, redireciona para página de perfil
-                window.location.href = "/profile";
-            } else {
-                // Erro no login, extrai a mensagem de erro do JSON
-                return response.json();
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao enviar os dados:', error);
-            exibirErro('Erro ao enviar os dados: ' + error.message);
-        })
-        .then(errorResponse => {
-            if (errorResponse && errorResponse.message) {
-                // Exibir a mensagem de erro para o usuário
-                exibirErro(errorResponse.message);
-            }
-        });
+            .then(response => {
+                if (!response.ok) {
+                    return response.json(); // Extrai a mensagem de erro do JSON
+                }
+                // Se o login for bem-sucedido, obtém o usuário logado
+                return obterUsuarioLogado();
+            })
+            .catch(error => {
+                console.error('Erro ao enviar os dados:', error);
+                exibirErro('Erro ao enviar os dados: ' + error.message);
+            })
+            .then(errorResponse => {
+                if (errorResponse && errorResponse.message) {
+                    exibirErro(errorResponse.message); // Exibe a mensagem de erro, se houver
+                }
+            });
     });
+
+    // Função para obter o usuário logado e redirecionar com base no grupo
+    async function obterUsuarioLogado() {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Inclui cookies na requisição
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao obter usuário logado');
+            }
+
+            const data = await response.json();
+
+            // Redireciona com base no grupo do usuário
+            if (data.grupo === "CLIENTE") {
+                window.location.href = "/profile"; // Redireciona para perfil
+            } else {
+                window.location.href = "/backoffice"; // Redireciona para backoffice
+            }
+        } catch (error) {
+            console.error('Erro ao obter usuário logado:', error);
+            exibirErro('Erro ao obter usuário logado: ' + error.message);
+        }
+    }
 
     // Função para extrair a mensagem de erro do HTML
     function extractError(htmlMessage) {

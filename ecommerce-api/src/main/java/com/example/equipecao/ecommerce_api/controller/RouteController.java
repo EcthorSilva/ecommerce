@@ -59,4 +59,9 @@ public class RouteController {
     public String product() {
         return "pages/product";
     }
+    // rota para a pagina de 401
+    @GetMapping("/401")
+    public String error401() {
+        return "pages/401";
+    }
 }
