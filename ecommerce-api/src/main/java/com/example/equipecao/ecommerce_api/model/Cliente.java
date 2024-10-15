@@ -8,8 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="TB_Cliente")
@@ -17,7 +22,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cliente {
+public class Cliente implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +52,46 @@ public class Cliente {
 
     @NotBlank
     private String senha;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Retorne as autoridades do cliente, se houver
+        return null;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return true;
+    }
 }

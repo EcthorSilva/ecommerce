@@ -11,11 +11,14 @@
 
 package com.example.equipecao.ecommerce_api.controller;
 
+import com.example.equipecao.ecommerce_api.model.Cliente;
 import com.example.equipecao.ecommerce_api.model.Usuario;
+import com.example.equipecao.ecommerce_api.repository.ClienteRepository;
 import com.example.equipecao.ecommerce_api.repository.UsuarioRepository;
 
 import java.util.Enumeration;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,6 +42,9 @@ public class AuthController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     // Método para realizar o login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario loginRequest, HttpServletRequest request) {
@@ -47,18 +53,29 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getSenha()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            Usuario usuario = usuarioRepository.findByEmail(loginRequest.getEmail())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            // Verificar se é um usuário
+            Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(loginRequest.getEmail());
+            if (usuarioOptional.isPresent()) {
+                Usuario usuario = usuarioOptional.get();
+                HttpSession session = request.getSession();
+                session.setAttribute("usuario", usuario);
+                System.out.println("Sessão criada: " + session.getId());
+                System.out.println("Usuário armazenado na sessão: " + usuario.getEmail());
+                return ResponseEntity.ok().body("{\"message\": \"Login successful\"}");
+            }
 
-            // Armazenar informações do usuário na sessão
-            HttpSession session = request.getSession();
-            session.setAttribute("usuario", usuario);
+            // Verificar se é um cliente
+            Optional<Cliente> clienteOptional = clienteRepository.findByEmail(loginRequest.getEmail());
+            if (clienteOptional.isPresent()) {
+                Cliente cliente = clienteOptional.get();
+                HttpSession session = request.getSession();
+                session.setAttribute("cliente", cliente);
+                System.out.println("Sessão criada: " + session.getId());
+                System.out.println("Cliente armazenado na sessão: " + cliente.getEmail());
+                return ResponseEntity.ok().body("{\"message\": \"Login successful\"}");
+            }
 
-            // Adicionar logs
-            System.out.println("Sessão criada: " + session.getId());
-            System.out.println("Usuário armazenado na sessão: " + usuario.getEmail());
-
-            return ResponseEntity.ok().body("{\"message\": \"Login successful\"}");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Credenciais inválidas\"}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Credenciais inválidas\"}");
         }
@@ -74,20 +91,21 @@ public class AuthController {
         return ResponseEntity.ok("{\"message\": \"Logout realizado com sucesso\"}");
     }
 
-    // Método para retornar informações do usuário logado
+    // Método para retornar informações do usuário ou cliente logado
     @GetMapping("/me")
     public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             System.out.println("Sessão recuperada: " + session.getId());
-    
+
             // Imprimir todos os atributos da sessão
             Enumeration<String> attributeNames = session.getAttributeNames();
             while (attributeNames.hasMoreElements()) {
                 String attributeName = attributeNames.nextElement();
-                System.out.println("Atributo da sessão: " + attributeName + " = " + session.getAttribute(attributeName));
+                System.out
+                        .println("Atributo da sessão: " + attributeName + " = " + session.getAttribute(attributeName));
             }
-    
+
             // Recuperar o contexto de segurança
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
@@ -96,8 +114,12 @@ public class AuthController {
                     Usuario usuario = (Usuario) principal;
                     System.out.println("Usuário recuperado da sessão: " + usuario.getEmail());
                     return ResponseEntity.ok(usuario);
+                } else if (principal instanceof Cliente) {
+                    Cliente cliente = (Cliente) principal;
+                    System.out.println("Cliente recuperado da sessão: " + cliente.getEmail());
+                    return ResponseEntity.ok(cliente);
                 } else {
-                    System.out.println("Principal não é uma instância de Usuario.");
+                    System.out.println("Principal não é uma instância de Usuario ou Cliente.");
                 }
             } else {
                 System.out.println("Autenticação não encontrada ou não autenticada.");
