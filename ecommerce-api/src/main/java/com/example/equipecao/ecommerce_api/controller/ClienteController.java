@@ -1,6 +1,7 @@
 package com.example.equipecao.ecommerce_api.controller;
 
 import com.example.equipecao.ecommerce_api.model.Cliente;
+import com.example.equipecao.ecommerce_api.model.Grupo;
 import com.example.equipecao.ecommerce_api.repository.ClienteRepository;
 import com.example.equipecao.ecommerce_api.util.CPFValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,10 @@ public class ClienteController {
         if (cliente.getEmail().equals(cliente.getEmailSecundario())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email secundário não pode ser igual ao email de cadastro.");
         }
+
+        // Definir grupo e ativo
+        cliente.setGrupo(Grupo.CLIENTE);
+        cliente.setAtivo(true);
 
         // Criptografa a senha antes de salvar
         cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));

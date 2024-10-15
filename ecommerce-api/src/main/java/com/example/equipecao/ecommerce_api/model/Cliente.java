@@ -53,6 +53,11 @@ public class Cliente implements UserDetails{
     @NotBlank
     private String senha;
 
+    @Enumerated(EnumType.STRING)
+    private Grupo grupo;
+
+    private boolean ativo;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Retorne as autoridades do cliente, se houver
