@@ -4,6 +4,27 @@ document.addEventListener("DOMContentLoaded", function () {
         return regex.test(email);
     }
 
+    function mascara(i) {
+        var v = i.value;
+
+        if (isNaN(v[v.length - 1])) { // impede entrada de não-numéricos
+            i.value = v.substring(0, v.length - 1);
+            return;
+        }
+
+        i.setAttribute("maxlength", "14");
+        if (v.length == 3 || v.length == 7) i.value += ".";
+        if (v.length == 11) i.value += "-";
+    }
+
+    // Seleciona o input e associa a função ao evento oninput
+    const input = document.querySelector('input[type="text"]'); // Altere o seletor conforme necessário
+    if (input) {
+        input.addEventListener('input', function () {
+            mascara(this);
+        });
+    }
+
     function exibirErro(mensagem) {
         var errorDiv = document.querySelector('.alert-danger');
         errorDiv.querySelector('strong').textContent = mensagem;
