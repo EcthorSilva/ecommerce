@@ -85,6 +85,19 @@ public class ClienteController {
         return ResponseEntity.ok("Cliente deletado com sucesso.");
     }
 
+    // Atualizar senha
+    @PatchMapping("/{id}/update-password")
+    public ResponseEntity<String> updatePassword(@PathVariable long id, @RequestParam String novaSenha) {
+        Optional<Cliente> clienteOpt = clienteRepository.findById(id);
+        if (clienteOpt.isPresent()) {
+            Cliente cliente = clienteOpt.get();
+            cliente.setSenha(passwordEncoder.encode(novaSenha));
+            clienteRepository.save(cliente);
+            return ResponseEntity.ok("Senha do cliente atualizada com sucesso.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
+    }
+
     // Verifica se o email é válido
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
