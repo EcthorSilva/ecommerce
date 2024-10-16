@@ -7,20 +7,19 @@ document.addEventListener("DOMContentLoaded", function () {
     function mascara(i) {
         var v = i.value;
 
-        if (isNaN(v[v.length - 1])) { // impede entrada de não-numéricos
+        if (isNaN(v[v.length - 1])) { // Impede entrada de não-numéricos
             i.value = v.substring(0, v.length - 1);
             return;
         }
 
         i.setAttribute("maxlength", "14");
-        if (v.length == 3 || v.length == 7) i.value += ".";
-        if (v.length == 11) i.value += "-";
+        if (v.length === 3 || v.length === 7) i.value += ".";
+        if (v.length === 11) i.value += "-";
     }
 
-    // Seleciona o input e associa a função ao evento oninput
-    const input = document.querySelector('input[type="text"]'); // Altere o seletor conforme necessário
-    if (input) {
-        input.addEventListener('input', function () {
+    const cpfInput = document.getElementById("cpf");
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function () {
             mascara(this);
         });
     }
@@ -37,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function registrarUsuario(dados) {
         try {
-            const response = await fetch('http://localhost:8080/api/usuarios', {
+            const response = await fetch('http://localhost:8080/api/clientes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -57,12 +56,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.getElementById("signupButton").addEventListener("click", function () {
-        var nome = document.getElementById("nome").value;
-        var cpf = document.getElementById("cpf").value;
-        var email = document.getElementById("email").value;
-        var senha = document.getElementById("senha").value;
-        var confirmarSenha = document.getElementById("confirmarSenha").value;
-        var termos = document.getElementById("termos").checked;
+        const nomeCompleto = document.getElementById("nome").value;
+        const dataNascimento = document.getElementById("dataNascimento").value;
+        const cpf = document.getElementById("cpf").value;
+        const email = document.getElementById("emailPrincipal").value;
+        const emailSecundario = document.getElementById("emailSecundario").value;
+        const senha = document.getElementById("senha").value;
+        const confirmarSenha = document.getElementById("confirmarSenha").value;
+        const termos = document.getElementById("termos").checked;
+
+        // Captura o valor do gênero selecionado
+        const genero = document.querySelector('input[name="inlineRadioOptions"]:checked');
+        if (!genero) {
+            exibirErro('Por favor, selecione o gênero');
+            return;
+        }
 
         if (!validarEmail(email)) {
             exibirErro('Email inválido');
@@ -79,21 +87,22 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        var dados = {
-            nome: nome,
+        const dados = {
+            nomeCompleto: nomeCompleto,
+            dataNascimento: dataNascimento,
+            genero: genero.value,  // Gênero selecionado
             cpf: cpf,
             email: email,
-            senha: senha,
-            grupo: 'ESTOQUISTA',
-            ativo: true
+            emailSecundario: emailSecundario,
+            senha: senha
         };
 
         registrarUsuario(dados);
     });
 });
 
-// validação
-(function() {
+// Validação de carregamento do script
+(function () {
     const scriptName = document.currentScript.src.split('/').pop();
     console.log(`${scriptName} carregado com sucesso`);
 })();
