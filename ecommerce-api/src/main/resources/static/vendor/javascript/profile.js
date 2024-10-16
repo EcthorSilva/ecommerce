@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
     async function carregarPerfil() {
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês é 0-indexado
+            const ano = data.getFullYear();
+            return `${dia}/${mes}/${ano}`;
+        }
+
         try {
             const response = await fetch('http://localhost:8080/api/auth/me', {
                 method: 'GET',
@@ -23,8 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Atualiza os elementos HTML com os dados do usuário
-            document.querySelector('.userNome').textContent = data.nome;
+            document.querySelector('.userNome').textContent = data.nomeCompleto;
             document.querySelector('.userEmail').textContent = data.email;
+            document.querySelector('.userEmailSec').textContent = data.emailSecundario;
+            document.querySelector('.userGenero').textContent = data.genero;
+            document.querySelector('.userNascimento').textContent = formatarData(data.dataNascimento);
             document.querySelector('.userGrup').textContent = data.grupo;
 
         } catch (error) {
