@@ -51,6 +51,9 @@ public class UsuarioController {
         if (!CPFValidator.isValidCPF(usuario.getCpf())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF inválido.");
         }
+        if(usuarioRepository.findByCpf(usuario.getCpf()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF já cadastrado.");
+        }
     
         // Criptografa a senha antes de salvar
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));

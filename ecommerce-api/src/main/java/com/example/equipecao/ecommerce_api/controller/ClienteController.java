@@ -43,6 +43,9 @@ public class ClienteController {
         if (!CPFValidator.isValidCPF(cliente.getCpf())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF inválido.");
         }
+        if(clienteRepository.findByCpf(cliente.getCpf()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF já cadastrado.");
+        }
         if (cliente.getEmail().equals(cliente.getEmailSecundario())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email secundário não pode ser igual ao email de cadastro.");
         }
