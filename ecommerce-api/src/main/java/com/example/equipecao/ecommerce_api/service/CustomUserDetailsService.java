@@ -7,8 +7,12 @@
 
 package com.example.equipecao.ecommerce_api.service;
 
+import com.example.equipecao.ecommerce_api.model.Cliente;
 import com.example.equipecao.ecommerce_api.model.Usuario;
+import com.example.equipecao.ecommerce_api.repository.ClienteRepository;
 import com.example.equipecao.ecommerce_api.repository.UsuarioRepository;
+
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,10 +25,21 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
-        return usuario;
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isPresent()) {
+            return usuarioOptional.get();
+        }
+
+        Optional<Cliente> clienteOptional = clienteRepository.findByEmail(email);
+        if (clienteOptional.isPresent()) {
+            return clienteOptional.get();
+        }
+
+        throw new UsernameNotFoundException("Usuário ou cliente não encontrado com o email: " + email);
     }
 }

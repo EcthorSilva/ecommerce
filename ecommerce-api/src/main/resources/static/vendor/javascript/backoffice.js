@@ -450,7 +450,10 @@ document.addEventListener('DOMContentLoaded', function() {
             usuarioLogadoId = data.id;
 
             // Verifica o grupo do usuário
-            if (data.grupo === "ESTOQUISTA") {
+            if (data.grupo === "CLIENTE") {
+                // Redireciona para a página de erro 401
+                window.location.href = '/401';
+            } else if (data.grupo === "ESTOQUISTA") {
                 // Esconde a opção de usuários no menu lateral
                 document.getElementById('linkUsuarios').classList.add('d-none');
 

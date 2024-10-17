@@ -24,30 +24,68 @@
             <div class="d-flex align-items-center py-3">
                 <div class="container">
                     <div class="row d-flex justify-content-center align-items-center">
-                        <div class="col-12 col-md-9 col-lg-7 col-xl-5">
-                            <div class="" style="border-radius: 15px;">
-                                <div class="card-body p-3 p-md-5">
-                                    <h2 class="text-center mb-4 mb-md-5">Sign Up</h2>
+                        <div class="col-6">
+                            <div class="card-body p-3 p-5">
+                                <div class="row">
+                                    <h2 class="text-center mb-4">Sign Up</h2>
+                                </div>
+                                <div class="row">
                                     <form id="loginForm">
+                                        <!-- nome -->
                                         <div class="form-floating mb-4">
-                                            <input type="email" class="form-control form-control-lg" id="email" placeholder="e-mail">
-                                            <label for="e-mail">E-mail</label>
+                                            <input type="nome" class="form-control" id="nome" placeholder="Nome">
+                                            <label for="nome">Nome Completo</label>
+                                        </div>
+                                        <!-- CPF / Data Nasc -->
+                                        <div class="row g-2">
+                                            <div class="col-md">
+                                                <!-- CPF -->
+                                                <div class="form-floating mb-4">
+                                                    <input type="text" class="form-control cpf" id="cpf" placeholder="xxx.xxx.xxx.xx"  value="">
+                                                    <label for="cpf">CPF</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <!-- data de nascimento -->
+                                                <div class="form-floating mb-4">
+                                                    <input type="date" class="form-control" id="dataNascimento" placeholder="" value="">
+                                                    <label for="dataNascimento">Data de Nascimento</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4" id="genero">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Masculino" value="Masculino">
+                                                <label class="form-check-label" for="inlineRadio1">Masculino</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Feminino" value="Feminino">
+                                                <label class="form-check-label" for="inlineRadio2">Feminino</label>
+                                            </div>
+                                        </div>
+                                        <!-- email principal e email secundario -->
+                                        <div class="form-floating mb-4">
+                                            <input type="email" class="form-control" id="emailPrincipal" placeholder="name@example.com" value="">
+                                            <label for="floatingInputGrid">Email Principal</label>
                                         </div>
                                         <div class="form-floating mb-4">
-                                            <input type="email" class="form-control form-control-lg" id="nome" placeholder="e-mail">
-                                            <label for="e-mail">nome</label>
+                                            <input type="email" class="form-control" id="emailSecundario" placeholder="name@example.com" value="">
+                                            <label for="floatingInputGrid">Email Secundario</label>
                                         </div>
-                                        <div class="form-floating mb-4">
-                                            <input type="email" class="form-control form-control-lg" id="cpf" placeholder="e-mail">
-                                            <label for="CPF">CPF</label>
-                                        </div>
-                                        <div class="form-floating mb-4">
-                                            <input type="password" class="form-control form-control-lg" id="senha" placeholder="password">
-                                            <label for="password">Senha</label>
-                                        </div>
-                                        <div class="form-floating mb-4">
-                                            <input type="password" class="form-control form-control-lg" id="confirmarSenha" placeholder="password">
-                                            <label for="password">Confirmar senha</label>
+                                        <!-- senha / confirmar senha -->
+                                        <div class="row g-2 mb-4">
+                                            <div class="col-md">
+                                                <div class="form-floating">
+                                                    <input type="password" class="form-control" id="senha" placeholder="password" value="">
+                                                    <label for="password">Senha</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="form-floating">
+                                                    <input type="password" class="form-control" id="confirmarSenha" placeholder="password" value="">
+                                                    <label for="password">Confirmar senha</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-check d-flex justify-content-center mb-4">
                                             <input class="form-check-input me-2" type="checkbox" value="" id="termos" />
@@ -64,7 +102,7 @@
                                         <p class="text-center text-muted mt-4 mb-4">Já tem uma conta? <a href="/login"
                                             class="fw-bold text-body"><u>Faça Login</u></a>
                                         </p>
-
+    
                                         <div class="alert alert-danger d-flex justify-content-center visually-hidden" role="alert">
                                             <strong>erro</strong>
                                         </div>

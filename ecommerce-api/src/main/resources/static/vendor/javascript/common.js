@@ -8,28 +8,39 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 credentials: 'include'
             });
-
+    
             const loggedInElement = document.querySelector('.logged-in');
             const loggedOutElement = document.querySelector('.logged-out');
-
+            const clienteItem = document.querySelector('.clienteItem');
+            const usuarioItem = document.querySelector('.usuarioItem');
+    
             if (response.ok) {
                 const data = await response.json();
                 console.log('Usuário logado:', data);
-
-                // Mostra o menu de usuário logado
+    
+                // Verifica o grupo do usuário
+                if (data.grupo === 'CLIENTE') {
+                    clienteItem.classList.remove('visually-hidden');
+                    usuarioItem.classList.add('visually-hidden');
+                } else {
+                    clienteItem.classList.add('visually-hidden');
+                    usuarioItem.classList.remove('visually-hidden');
+                }
+    
+                // Exibe o menu de usuário logado
                 loggedInElement.classList.remove('visually-hidden');
                 loggedOutElement.classList.add('visually-hidden');
             } else {
                 console.log('Usuário não está logado');
-
-                // Mostra o menu de usuário deslogado
+    
+                // Exibe o menu de usuário deslogado
                 loggedInElement.classList.add('visually-hidden');
                 loggedOutElement.classList.remove('visually-hidden');
             }
         } catch (error) {
             console.error('Erro ao verificar login:', error);
-
-            // Mostra o menu de usuário deslogado em caso de erro
+    
+            // Em caso de erro, exibe o menu de usuário deslogado
             document.querySelector('.logged-in').classList.add('visually-hidden');
             document.querySelector('.logged-out').classList.remove('visually-hidden');
         }
