@@ -360,7 +360,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="modal-header pb-3">
-                            <h4 class="text-center">mudar senha</h4>
+                            <h4 class="text-center">Alterar Senha</h4>
                             <hr>
                         </div>
                         <!-- senha / confirmar senha -->
@@ -381,10 +381,34 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Close
+                            Cancelar
                         </button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary">Salvar</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <!-- Toasts (Erro e Sucesso) -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <!-- Toast de Erro -->
+            <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Erro</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Ocorreu um erro ao alterar a senha.
+                </div>
+            </div>
+
+            <!-- Toast de Sucesso -->
+            <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-success text-white">
+                    <strong class="me-auto">Sucesso</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Senha alterada com sucesso!
                 </div>
             </div>
         </div>
