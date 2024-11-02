@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Cart | Ecommerce</title>
+        <title>Checkout | Ecommerce</title>
         <link rel="icon" href="/static/assets/logo/logo_transparent.png" type="image/png">
         <!-- css comum -->
         <link rel="stylesheet" href="/static/vendor/css/common.css"/>
@@ -28,14 +28,14 @@
                 </ul>
             </div>
         </nav>
-        <header class="py-3 mb-4 border-bottom sticky-top bg-body z-1">
+        <header class="py-3 mb-4 border-bottom sticky-top bg-body z-2">
             <div class="container d-flex flex-wrap justify-content-center align-items-center">
                 <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
                     <img src="/static/assets/logo/logo_transparent.png" alt="" width="32" height="32">
                     <span class="ms-3 fs-5">Stream Games</span>
                 </a>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                    <input type="search" id="searchBar" class="form-control visually-hidden" placeholder="Search..." aria-label="Search">
                 </form>
                 <ul class="nav d-flex align-items-center py-0">
                     <!-- dropdown menu -->
@@ -66,28 +66,80 @@
                 </ul>
             </div>
         </header>
-        <section>
+        <section class="pt-0">
             <div class="container">
                 <div class="row d-flex justify-content-center my-4">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-header py-3">
-                                <h5 class="mb-0">Produto</h5>
+                                <h5 class="mb-0">Dados do titular do cartão</h5>
                             </div>
-                            <div class="card-body min-height-card">
-                                <!-- produtos aqui -->
+                            <div class="card-body">
+                                <form class="mt-3">
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
+                                        <label for="cardNumber" class="text-muted">Número do cartão                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col  mb-4">
+                                            <div class="form-floating ">
+                                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                                <label for="expiryDate"  class="text-muted">Validade (MM/AA)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col  mb-4">
+                                            <div class="form-floating ">
+                                                <input type="text" class="form-control" id="cvv" placeholder="Enter CVV">
+                                                <label for="cvv"  class="text-muted">CVV</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="cardName" placeholder="Enter name on card">
+                                        <label for="cardName"  class="text-muted">Nome completo</label>
+                                    </div>
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="cpf" placeholder="Enter name on card">
+                                        <label for="cardName"  class="text-muted">CPF</label>
+                                    </div>
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="billingAddress" placeholder="Enter billing address">
+                                        <label for="billingAddress"  class="text-muted">Endereço</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col col-md-5">
+                                            <div class="form-floating mb-4">
+                                                <input type="text" class="form-control" id="billingCity" placeholder="Enter billing city">
+                                                <label for="billingCity"  class="text-muted">Cidade</label>
+                                            </div>
+                                        </div>
+                                        <div class="col col-md-3 ">
+                                            <div class="form-floating md-1 mb-4">
+                                                <input type="text" class="form-control" id="billingState" placeholder="Enter billing state">
+                                                <label for="billingState"  class="text-muted">UF</label>
+                                            </div>
+                                        </div>
+                                        <div class="col col-md-4">
+                                            <div class="form-floating mb-1">
+                                                <input type="text" class="form-control" id="billingZip" placeholder="Enter billing zip">
+                                                <label for="billingZip"  class="text-muted">CEP</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </form>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="card mb-4">
                             <div class="card-header py-3">
-                                <h5 class="mb-0">Resumo</h5>
+                                <h5 class="mb-0">Resumo do pedido</h5>
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush mb-2">
                                     <li
-                                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-2">
                                         Valor dos Produtos:
                                         <span>R$ 0,00</span>
                                     </li>
@@ -98,40 +150,35 @@
                                         </div>
                                         <span><strong>R$ 0,00</strong></span>
                                     </li>
-                                    <li class="text-muted list-cust list-group-flshu d-flex justify-content-between align-items-center px-0 pb-2">
+                                    <li class="text-muted list-cust list-group-item d-flex justify-content-between align-items-center px-0">
                                         <span>
                                             (em até 3x de R$ 0,00 sem juros)
                                         </span>
                                     </li>
-                                    <hr class="my-2 text-muted">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
-                                        <div>
-                                            Valor à vista no <strong>Pix</strong>:
-                                        </div>
-                                        <span><strong>R$ 0,00</strong></span>
-                                    </li>
                                 </ul> 
                                 <div class="d-flex flex-column p-1">
-                                    <button type="button" class="btn1 btn btn-outline-secondary btn-lg btn-block mb-3" onclick="window.location.href='/';">
-                                        Continuar comprando
+                                    <button type="button" class="btn2 btn btn-secondary btn-lg btn-block">
+                                        Finalizar a compra
                                     </button>
-                                    <button type="button" class="btn2 btn btn-secondary btn-lg btn-block" onclick="finalizarCompra()">
-                                        Ir para o pagamento
-                                    </button>
-                                </div>   
+                                </div> 
                             </div>
                         </div>
                         <div class="card mb-4">
                             <div class="card-body">
-                                <form>
-                                    <div class="mb-2">
-                                        <label for="cupom" class="mb-3"><strong>Cupom de desconto</strong></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control py-2" id="cupom" placeholder="cupom">
-                                            <button class="btn2 btn btn-secondary" type="#">Aplicar Cupom</button>
-                                        </div>
-                                    </div>
-                                </form>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-flex-start border-0 px-0 pb-0">
+                                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3cg" />
+                                        <label class="form-check-label" for="">
+                                            Endereço de entrega é o mesmo que o de cobrança.
+                                        </label>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-flex-start border-0 px-0 pb-0 mt-1">
+                                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3cg" />
+                                        <label class="form-check-label" for="">
+                                            Lembre desta informação, na próxima vez.
+                                        </label>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -189,7 +236,6 @@
         </footer>
         <!-- scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <script src="/static/vendor/javascript/cart.js"></script>
         <script src="/static/vendor/javascript/common.js"></script>
     </body>
 </html>

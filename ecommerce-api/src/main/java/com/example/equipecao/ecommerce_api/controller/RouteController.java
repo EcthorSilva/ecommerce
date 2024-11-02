@@ -64,4 +64,9 @@ public class RouteController {
     public String error401() {
         return "pages/401";
     }
+    // rota para a pagina de checkout
+    @GetMapping("/checkout")
+    public String checkout() {
+        return "pages/checkout";
+    }
 }

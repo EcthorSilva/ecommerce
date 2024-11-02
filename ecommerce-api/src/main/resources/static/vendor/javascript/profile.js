@@ -118,7 +118,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditProfile'));
             modal.hide();
 
-            atualizarPerfilDOM(payload);
+            // Recarrega o perfil atualizado no front-end
+            await carregarPerfil();
         } catch (error) {
             console.error('Erro:', error);
             mostrarToast('erro');
