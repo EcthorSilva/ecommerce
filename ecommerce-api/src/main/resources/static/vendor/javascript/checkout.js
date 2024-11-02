@@ -1,0 +1,105 @@
+document.addEventListener("DOMContentLoaded", function() {
+    // Requisição para obter os e-mails do usuário
+    fetch("http://localhost:8080/api/auth/me")
+        .then(response => response.json())
+        .then(data => {
+            const emailSelect = document.getElementById("emailSelect");
+
+            // Adiciona o email principal
+            const primaryEmailOption = document.createElement("option");
+            primaryEmailOption.value = data.email;
+            primaryEmailOption.text = data.email;
+            primaryEmailOption.selected = true;
+            emailSelect.appendChild(primaryEmailOption);
+
+            // Adiciona o email secundário, se existir
+            if (data.emailSecundario) {
+                const secondaryEmailOption = document.createElement("option");
+                secondaryEmailOption.value = data.emailSecundario;
+                secondaryEmailOption.text = data.emailSecundario;
+                emailSelect.appendChild(secondaryEmailOption);
+            }
+        })
+        .catch(error => console.error("Erro ao carregar dados do usuário:", error));
+
+    // Carrega os valores do resumo do pedido a partir do localStorage
+    exibirResumoPedido();
+
+    // Adiciona o evento de clique para o botão "Continuar"
+    document.querySelector(".btn2").addEventListener("click", salvarPedido);
+});
+
+// Função para exibir o resumo do pedido
+function exibirResumoPedido() {
+    // Obtém os valores do localStorage
+    const valorProdutos = localStorage.getItem("valorPrazo") || "0.00";
+    const valorPrazo = localStorage.getItem("valorPrazo") || "0.00";
+    const valorParcela = localStorage.getItem("valorParcela") || "0.00";
+
+    // Formata os valores no padrão brasileiro
+    const valorProdutosFormatado = formatarNumero(parseFloat(valorProdutos));
+    const valorPrazoFormatado = formatarNumero(parseFloat(valorPrazo));
+    const valorParcelaFormatado = formatarNumero(parseFloat(valorParcela));
+
+    // Atualiza os elementos no HTML com os valores do resumo do pedido
+    document.querySelector("ul.list-group li:nth-child(1) span").textContent = "R$ " + valorProdutosFormatado;
+    document.querySelector("ul.list-group li:nth-child(3) span").textContent = "R$ " + valorPrazoFormatado;
+    document.querySelector(".list-cust span").textContent = "(em até 3x de R$ " + valorParcelaFormatado + " sem juros)";
+}
+
+// Função para salvar o pedido no localStorage
+function salvarPedido() {
+    // Obtém os dados do carrinho do localStorage
+    const carrinhoItens = JSON.parse(localStorage.getItem("carrinho")) || [];
+    const valorPrazo = parseFloat(localStorage.getItem("valorPrazo")) || 0.00;
+    const valorVista = parseFloat(localStorage.getItem("valorVista")) || 0.00;
+
+    // Obtém a forma de pagamento selecionada
+    const formaPagamentoSelect = document.querySelector(".form-select");
+    let formaPagamento = "CARTAO_CREDITO"; // Define um padrão
+
+    switch (formaPagamentoSelect.value) {
+        case "1":
+            formaPagamento = "CARTAO_CREDITO";
+            break;
+        case "2":
+            formaPagamento = "PIX";
+            break;
+        case "3":
+            formaPagamento = "BOLETO";
+            break;
+    }
+
+    // Organiza os itens do pedido conforme o formato necessário
+    const itensPedido = carrinhoItens.map(item => {
+        return {
+            produtoId: item.id,
+            nomeProduto: item.nome,
+            valorUnitario: item.temDesconto ? item.precoComDesconto : item.preco,
+            quantidade: item.quantidade
+        };
+    });
+
+    // Define o valor total com base na escolha de pagamento à vista ou a prazo
+    const valorTotal = formaPagamento === "CARTAO_CREDITO" ? valorPrazo : valorVista;
+
+    // Estrutura o objeto de pedido para salvar no localStorage
+    const pedido = {
+        valorTotal: valorTotal,
+        formaPagamento: formaPagamento,
+        clienteId: 0, 
+        itens: itensPedido
+    };
+
+    // Salva o pedido no localStorage
+    localStorage.setItem("pedidos", JSON.stringify(pedido));
+    console.log("Pedido salvo no localStorage:", pedido);
+
+    // Redireciona para a próxima página, onde o pedido será finalizado
+    window.location.href = "/checkout";
+}
+
+// Função para formatar números para o padrão brasileiro
+function formatarNumero(numero) {
+    return numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
