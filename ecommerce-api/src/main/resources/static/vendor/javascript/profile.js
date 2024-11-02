@@ -28,13 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Função para atualizar o DOM com os dados do perfil
-    function atualizarPerfilDOM(data) {
+    function atualizarPerfilDOM(data) {      
         function formatarData(dataString) {
             const data = new Date(dataString);
             const dia = String(data.getDate()).padStart(2, '0');
             const mes = String(data.getMonth() + 1).padStart(2, '0');
             const ano = data.getFullYear();
-            return `${dia}-${mes}-${ano}`; // Formato para exibição
+            return `${dia}/${mes}/${ano}`;
         }
 
         document.querySelector('.userNome').textContent = data.nomeCompleto;
@@ -64,11 +64,17 @@ document.addEventListener("DOMContentLoaded", function () {
         toast.show();
     }
 
-    // Função para limpar os campos do modal
+    // Função para limpar os campos do modal de dados pessoais
     function limparCamposModal() {
         document.getElementById('nome').value = '';
         document.getElementById('dataNascimento').value = '';
         document.querySelectorAll('input[name="inlineRadioOptions"]').forEach(input => input.checked = false);
+    }
+
+    // Função para limpar os campos do modal de senha
+    function limparCamposModalSenha() {
+        document.getElementById('senha').value = '';
+        document.getElementById('confirmarSenha').value = '';
     }
 
     // Função para atualizar os dados pessoais
@@ -76,18 +82,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const nomeCompleto = document.getElementById('nome').value;
         const dataNascimento = document.getElementById('dataNascimento').value;
         const genero = document.querySelector('input[name="inlineRadioOptions"]:checked')?.value || '';
-    
+
         try {
-            // Recupera o perfil atual do usuário
             const perfilAtual = await fetch(`/api/clientes/${userId}`, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 credentials: 'include'
             }).then(res => res.json());
-    
-            // Cria o payload com todos os campos necessários
+
             const payload = {
                 id: userId,
                 nomeCompleto: nomeCompleto || perfilAtual.nomeCompleto,
@@ -100,30 +102,54 @@ document.addEventListener("DOMContentLoaded", function () {
                 grupo: perfilAtual.grupo,
                 ativo: perfilAtual.ativo 
             };
-    
-            // Envia a solicitação de atualização
+
             const response = await fetch(`/api/clientes/${userId}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify(payload)
             });
-    
-            if (!response.ok) {
-                const errorMessage = await response.text();
-                throw new Error(`Erro: ${response.status} - ${errorMessage}`);
-            }
-    
+
+            if (!response.ok) throw new Error('Erro ao atualizar dados pessoais');
+            
             mostrarToast('sucesso');
             limparCamposModal();
-    
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditProfile'));
             modal.hide();
-    
-            // Atualiza o DOM com os dados atualizados
+
             atualizarPerfilDOM(payload);
+        } catch (error) {
+            console.error('Erro:', error);
+            mostrarToast('erro');
+        }
+    }
+
+    // Função para alterar a senha
+    async function alterarSenha() {
+        const novaSenha = document.getElementById('senha').value;
+        const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+        if (novaSenha !== confirmarSenha) {
+            alert('As senhas não coincidem!');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/clientes/${userId}/update-password?novaSenha=${encodeURIComponent(novaSenha)}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('Erro ao alterar a senha');
+            
+            mostrarToast('sucesso');
+            limparCamposModalSenha();
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditSenhaProfile'));
+            modal.hide();
+
         } catch (error) {
             console.error('Erro:', error);
             mostrarToast('erro');
@@ -132,7 +158,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Eventos
     document.querySelector('#modalEditProfile .btn-primary').addEventListener('click', atualizarDadosPessoais);
+    document.querySelector('#modalEditSenhaProfile .btn-primary').addEventListener('click', alterarSenha);
     document.getElementById('modalEditProfile').addEventListener('hidden.bs.modal', limparCamposModal);
+    document.getElementById('modalEditSenhaProfile').addEventListener('hidden.bs.modal', limparCamposModalSenha);
 
     // Carrega o perfil ao carregar a página
     carregarPerfil();
