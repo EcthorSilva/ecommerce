@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch("http://localhost:8080/api/auth/login", {
+        fetch("/api/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Função para obter o usuário logado e redirecionar com base no grupo
     async function obterUsuarioLogado() {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/me', {
+            const response = await fetch('/api/auth/me', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

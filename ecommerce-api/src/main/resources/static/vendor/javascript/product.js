@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     async function carregarProduto(produtoId) {
         console.log('ID do produto que será carregado:', produtoId);
         try {
-            const response = await fetch(`http://localhost:8080/api/produtos/${produtoId}`);
+            const response = await fetch(`/api/produtos/${produtoId}`);
             if (!response.ok) {
                 throw new Error('Erro ao carregar produto');
             }

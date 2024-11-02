@@ -174,7 +174,7 @@ function showAddCartToast(nomeDoJogo) {
 // Função para fazer a requisição ao endpoint
 async function carregarProdutosCatalogo(containerId, nome = '', pagina = 0) {
     try {
-        const url = nome ? `http://localhost:8080/api/produtos/search?nome=${nome}` : `http://localhost:8080/api/produtos?page=${pagina}&size=9`;
+        const url = nome ? `/api/produtos/search?nome=${nome}` : `/api/produtos?page=${pagina}&size=9`;
         console.log(`Fetching URL: ${url}`); // Log para depuração
         const response = await fetch(url);
         const data = await response.json();

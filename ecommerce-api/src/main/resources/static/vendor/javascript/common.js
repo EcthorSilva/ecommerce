@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     async function verificarLogin() {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/me', {
+            const response = await fetch('/api/auth/me', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Função para fazer logout
     async function logout() {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/logout', {
+            const response = await fetch('/api/auth/logout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

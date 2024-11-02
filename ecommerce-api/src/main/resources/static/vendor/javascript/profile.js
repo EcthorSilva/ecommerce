@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Função para carregar e exibir o perfil do usuário
     async function carregarPerfil() {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/me', {
+            const response = await fetch('/api/auth/me', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include'
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         try {
             // Recupera o perfil atual do usuário
-            const perfilAtual = await fetch(`http://localhost:8080/api/clientes/${userId}`, {
+            const perfilAtual = await fetch(`/api/clientes/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
     
             // Envia a solicitação de atualização
-            const response = await fetch(`http://localhost:8080/api/clientes/${userId}`, {
+            const response = await fetch(`/api/clientes/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

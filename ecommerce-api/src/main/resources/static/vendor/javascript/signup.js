@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function registrarUsuario(dados) {
         try {
-            const response = await fetch('http://localhost:8080/api/clientes', {
+            const response = await fetch('/api/clientes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

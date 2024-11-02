@@ -209,7 +209,7 @@ function adicionarCardsMaisVendidos(produtos, containerId) {
 // Função para fazer a requisição ao endpoint
 async function carregarProdutos(distribuidor, containerId, distribuidorId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/produtos/distribuidor/${distribuidor}`);
+        const response = await fetch(`/api/produtos/distribuidor/${distribuidor}`);
         const data = await response.json();
 
         console.log(`${distribuidor} Fetching URL:`, response.url); // Log para depuração
@@ -239,7 +239,7 @@ async function carregarProdutos(distribuidor, containerId, distribuidorId) {
 // Função para carregar os jogos mais vendidos
 async function carregarMaisVendidos(containerId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/produtos?page=0&size=10`);
+        const response = await fetch(`/api/produtos?page=0&size=10`);
         const data = await response.json();
 
         console.log('Mais vendidos Fetching URL:', response.url); // Log para depuração

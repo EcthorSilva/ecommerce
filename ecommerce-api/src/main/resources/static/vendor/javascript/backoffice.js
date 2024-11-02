@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Usuarios */ 
     async function carregarUsuarios() {
         try {
-            const response = await fetch('http://localhost:8080/api/usuarios');
+            const response = await fetch('/api/usuarios');
             if (!response.ok) {
                 throw new Error('Erro ao buscar usuários');
             }
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Cadastrar novo usuário
         try {
-            const response = await fetch('http://localhost:8080/api/usuarios', {
+            const response = await fetch('/api/usuarios', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
             switchElementAtual.checked = estadoOriginalSwitch; // Restaura o estado original do switch
         }else{
             try {
-                const response = await fetch(`http://localhost:8080/api/usuarios/${id}/status?ativo=${status}`, {
+                const response = await fetch(`/api/usuarios/${id}/status?ativo=${status}`, {
                     method: 'PATCH'
                 });
                 if (!response.ok) {
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tornar a função carregarProdutosPesquisa globalmente acessível
     window.carregarProdutosPesquisa = async function carregarProdutosPesquisa(nomeProduto) {
         try {
-            const response = await fetch(`http://localhost:8080/api/produtos/search?nome=${nomeProduto}`);
+            const response = await fetch(`/api/produtos/search?nome=${nomeProduto}`);
             if (!response.ok) {
                 throw new Error('Erro ao buscar produtos');
             }
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função para carregar produtos com base na pesquisa
     async function carregarProdutosPesquisa(nomeProduto) {
         try {
-            const response = await fetch(`http://localhost:8080/api/produtos/search?nome=${nomeProduto}`);
+            const response = await fetch(`/api/produtos/search?nome=${nomeProduto}`);
             if (!response.ok) {
                 throw new Error('Erro ao buscar produtos');
             }
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // alterar status do produto
     async function atualizarStatusProduto(id, status) {
         try {
-            const response = await fetch(`http://localhost:8080/api/produtos/${id}/status?ativo=${status}`, {
+            const response = await fetch(`/api/produtos/${id}/status?ativo=${status}`, {
                 method: 'PATCH'
             });
             if (!response.ok) {
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função para obter o usuário logado
     async function obterUsuarioLogado() {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/me', {
+            const response = await fetch('/api/auth/me', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
