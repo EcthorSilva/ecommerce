@@ -129,3 +129,39 @@ function formatarNumero(numero) {
 
 // Executa a função ao carregar a página
 window.addEventListener('load', exibirCarrinho);
+
+// Função para verificar se o usuário está logado com base na presença do ID
+async function verificarLogin() {
+    try {
+        const response = await fetch("/api/auth/me", {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data.id !== undefined; // Retorna true se o ID existir (usuário logado)
+        } else {
+            return false; // Se a requisição falhar, assume que o usuário não está logado
+        }
+    } catch (error) {
+        console.error("Erro ao verificar o login:", error);
+        return false;
+    }
+}
+
+// Função para redirecionar o usuário para o checkout ou login
+async function finalizarCompra() {
+    const estaLogado = await verificarLogin();
+
+    if (estaLogado) {
+        // Se o cliente estiver logado, redireciona para o checkout
+        window.location.href = "/checkout";
+    } else {
+        // Se o cliente NÃO estiver logado, redireciona para a tela de login
+        window.location.href = "/login";
+    }
+}
