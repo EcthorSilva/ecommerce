@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Cart | Ecommerce</title>
+        <title>Payment - Credit Card | Ecommerce</title>
         <link rel="icon" href="/static/assets/logo/logo_transparent.png" type="image/png">
         <!-- css comum -->
         <link rel="stylesheet" href="/static/vendor/css/common.css"/>
@@ -69,76 +69,65 @@
         <section>
             <div class="container">
                 <div class="row d-flex justify-content-center my-4">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-header py-3">
-                                <h5 class="mb-0">Produto</h5>
+                                <h5 class="mb-0">Dados do titular do cartão</h5>
                             </div>
-                            <div class="card-body min-height-card">
-                                <!-- produtos aqui -->
-                                <div class="card-body min-height-card">
-                                    <!-- produtos aqui -->
-                                    <div class="row mb-4 justify-content-evenly">
-                                        <div class="col-3">
-                                            <img src="https://assets.nuuvem.com/image/upload/t_quality_80/v1/highlights/6317966c632c3d0015f472ec/q9zx384trfvtixe46opy.jpg" class="w-100">
+                            <div class="card-body">
+                                <form class="mt-3">
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
+                                        <label for="cardNumber" class="text-muted">Número do cartão                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col  mb-4">
+                                            <div class="form-floating ">
+                                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                                <label for="expiryDate"  class="text-muted">Validade (MM/AA)</label>
+                                            </div>
                                         </div>
-                                        <div class="col-3">
-                                            <h6 class="pb-0">Hogwarts Legacy</h6>
-                                            <i class="bi bi-steam text-muted"></i>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="d-flex mb-6 justify-content-evenly">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <p class="text-start text-md-center">Valor:</p>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <p class="text-start text-md-center"><strong>R$ 104,99</strong></p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                        <p class="text-start text-md-center">Qtd:</p>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <p class="text-start text-md-center"><strong>1</strong></p>
-                                                    </div>
-                                                </div>
+                                        <div class="col  mb-4">
+                                            <div class="form-floating ">
+                                                <input type="text" class="form-control" id="cvv" placeholder="Enter CVV">
+                                                <label for="cvv"  class="text-muted">CVV</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
-                                    <div class="row mb-4 justify-content-evenly">
-                                        <div class="col-3">
-                                            <img src="https://assets.nuuvem.com/image/upload/t_banner_big/v1/products/6000b86cc883e61e8835cf7f/banners/hbkribsf2ruddgiiglsa.jpg" class="w-100">
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="cardName" placeholder="Enter name on card">
+                                        <label for="cardName"  class="text-muted">Nome completo</label>
+                                    </div>
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="cpf" placeholder="Enter name on card">
+                                        <label for="cardName"  class="text-muted">CPF</label>
+                                    </div>
+                                    <div class="form-floating  mb-4">
+                                        <input type="text" class="form-control" id="billingAddress" placeholder="Enter billing address">
+                                        <label for="billingAddress"  class="text-muted">Endereço</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col col-md-5">
+                                            <div class="form-floating mb-4">
+                                                <input type="text" class="form-control" id="billingCity" placeholder="Enter billing city">
+                                                <label for="billingCity"  class="text-muted">Cidade</label>
+                                            </div>
                                         </div>
-                                        <div class="col-3">
-                                            <h6 class="pb-0">Scott Pilgrim vs. The World: The Game</h6>
-                                            <i class="bi bi-windows text-muted"></i>
+                                        <div class="col col-md-3 ">
+                                            <div class="form-floating md-1 mb-4">
+                                                <input type="text" class="form-control" id="billingState" placeholder="Enter billing state">
+                                                <label for="billingState"  class="text-muted">UF</label>
+                                            </div>
                                         </div>
-                                        <div class="col-5">
-                                            <div class="d-flex mb-6 justify-content-evenly">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <p class="text-start text-md-center">Valor:</p>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <p class="text-start text-md-center"><strong>R$ 104,99</strong></p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                        <p class="text-start text-md-center">Qtd:</p>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <p class="text-start text-md-center"><strong>1</strong></p>
-                                                    </div>
-                                                </div>
+                                        <div class="col col-md-4">
+                                            <div class="form-floating mb-1">
+                                                <input type="text" class="form-control" id="billingZip" placeholder="Enter billing zip">
+                                                <label for="billingZip"  class="text-muted">CEP</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
-                                </div>
+                                    
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -171,6 +160,55 @@
                                         Fianlizar Compra
                                     </button>
                                 </div>   
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row mb-4 justify-content-evenly">
+                                    <div class="row pb-3">
+                                        <div class="col-4">
+                                            <img src="https://assets.nuuvem.com/image/upload/t_quality_80/v1/highlights/6317966c632c3d0015f472ec/q9zx384trfvtixe46opy.jpg" class="w-100">
+                                        </div>
+                                        <div class="col-8">
+                                            <h6 class="pb-0 text-truncate">Hogwarts Legacy</h6>
+                                            <i class="bi bi-steam text-muted"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex mb-0 pb-0 justify-content-between">
+                                            <div class="row mb-0 pb-0">
+                                                <p class="text-start mb-0 pb-0">Valor: <strong>R$ 104,99</strong></p>
+                                                <p class="text-start mb-0 pb-0"></p>
+                                            </div>
+                                            <div class="row mb-0 pb-0">
+                                                <p class="text-start mb-0 pb-0">Qtd: <strong>1</strong></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row mb-4 justify-content-evenly">
+                                    <div class="row pb-3">
+                                        <div class="col-4">
+                                            <img src="https://assets.nuuvem.com/image/upload/t_banner_big/v1/products/6000b86cc883e61e8835cf7f/banners/hbkribsf2ruddgiiglsa.jpg" class="w-100">
+                                        </div>
+                                        <div class="col-8">
+                                            <h6 class="pb-0 text-truncate">Scott Pilgrim vs. The World: The Game</h6>
+                                            <i class="bi bi-windows text-muted"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex mb-0 pb-0 justify-content-between">
+                                            <div class="row mb-0 pb-0">
+                                                <p class="text-start mb-0 pb-0">Valor: <strong>R$ 104,99</strong></p>
+                                                <p class="text-start mb-0 pb-0"></p>
+                                            </div>
+                                            <div class="row mb-0 pb-0">
+                                                <p class="text-start mb-0 pb-0">Qtd: <strong>1</strong></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
                     </div>

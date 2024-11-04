@@ -102,8 +102,15 @@ function salvarPedido() {
     localStorage.setItem("pedidos", JSON.stringify(pedido));
     console.log("Pedido salvo no localStorage:", pedido);
 
-    // Redireciona para a próxima página, onde o pedido será finalizado
-    window.location.href = "/payment";
+    // Redireciona para a página correspondente com base na forma de pagamento selecionada
+    if (formaPagamento === "CARTAO_CREDITO") {
+        window.location.href = "/payment/credit-card";
+    } else if (formaPagamento === "BOLETO") {
+        window.location.href = "/payment/payment-slip";
+    } else {
+        // Para outras formas de pagamento, adicione redirecionamentos conforme necessário
+        console.log("Forma de pagamento não possui redirecionamento específico.");
+    }
 }
 
 // Função para exibir o toast de erro
