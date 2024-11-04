@@ -47,10 +47,17 @@ function exibirResumoPedido() {
     document.querySelector(".list-cust span").textContent = "(em até 3x de R$ " + valorParcelaFormatado + " sem juros)";
 }
 
-// Função para salvar o pedido no localStorage
 function salvarPedido() {
     // Obtém os dados do carrinho do localStorage
     const carrinhoItens = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+    // Verifica se o carrinho está vazio
+    if (carrinhoItens.length === 0) {
+        console.log("Por favor, insira pelo menos um item no carrinho");
+        exibirErroToast("Por favor, insira pelo menos um item no carrinho");
+        return; // Impede que o pedido seja salvo no localStorage
+    }
+
     const valorPrazo = parseFloat(localStorage.getItem("valorPrazo")) || 0.00;
     const valorVista = parseFloat(localStorage.getItem("valorVista")) || 0.00;
 
@@ -96,7 +103,20 @@ function salvarPedido() {
     console.log("Pedido salvo no localStorage:", pedido);
 
     // Redireciona para a próxima página, onde o pedido será finalizado
-    window.location.href = "/checkout";
+    window.location.href = "/payment";
+}
+
+// Função para exibir o toast de erro
+function exibirErroToast(mensagem) {
+    const errorToast = document.getElementById("errorToast");
+    const toastBody = errorToast.querySelector(".toast-body");
+
+    // Define a mensagem de erro no corpo do toast
+    toastBody.textContent = mensagem;
+
+    // Cria uma instância do toast usando Bootstrap e exibe
+    const toast = new bootstrap.Toast(errorToast);
+    toast.show();
 }
 
 // Função para formatar números para o padrão brasileiro

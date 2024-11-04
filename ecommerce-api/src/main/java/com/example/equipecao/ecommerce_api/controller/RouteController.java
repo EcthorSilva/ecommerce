@@ -69,4 +69,9 @@ public class RouteController {
     public String checkout() {
         return "pages/checkout";
     }
+    // rota para a pagina de pagamento
+    @GetMapping("/payment")
+    public String payment() {
+        return "pages/payment";
+    }
 }
