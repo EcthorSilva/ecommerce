@@ -32,17 +32,19 @@ document.addEventListener("DOMContentLoaded", function() {
 // Função para exibir o resumo do pedido
 function exibirResumoPedido() {
     // Obtém os valores do localStorage
+    const valorVista = localStorage.getItem("valorVista") || "0.00";
     const valorProdutos = localStorage.getItem("valorPrazo") || "0.00";
     const valorPrazo = localStorage.getItem("valorPrazo") || "0.00";
     const valorParcela = localStorage.getItem("valorParcela") || "0.00";
 
     // Formata os valores no padrão brasileiro
+    const valorVistaFormatado = formatarNumero(parseFloat(valorVista));
     const valorProdutosFormatado = formatarNumero(parseFloat(valorProdutos));
     const valorPrazoFormatado = formatarNumero(parseFloat(valorPrazo));
     const valorParcelaFormatado = formatarNumero(parseFloat(valorParcela));
 
     // Atualiza os elementos no HTML com os valores do resumo do pedido
-    document.querySelector("ul.list-group li:nth-child(1) span").textContent = "R$ " + valorProdutosFormatado;
+    document.querySelector("ul.list-group li:nth-child(1) span").textContent = "R$ " + valorVistaFormatado;
     document.querySelector("ul.list-group li:nth-child(3) span").textContent = "R$ " + valorPrazoFormatado;
     document.querySelector(".list-cust span").textContent = "(em até 3x de R$ " + valorParcelaFormatado + " sem juros)";
 }
