@@ -85,7 +85,6 @@ function exibirValorTotalCompra() {
     }
 }
 
-
 // Função para formatar o número no padrão brasileiro
 function formatarNumero(numero) {
     return numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -95,4 +94,77 @@ function formatarNumero(numero) {
 window.addEventListener('DOMContentLoaded', function() {
     exibirItensCarrinho();
     exibirValorTotalCompra();
+});
+
+
+// Função para validar o formulário do cartão de crédito
+function validarFormularioCartaoCredito() {
+    let camposValidos = true;
+    const camposObrigatorios = [
+        document.getElementById("cardNumber"),
+        document.getElementById("expiryDate"),
+        document.getElementById("cvv"),
+        document.getElementById("cardName"),
+        document.getElementById("cpf"),
+        document.getElementById("billingAddress"),
+        document.getElementById("billingCity"),
+        document.getElementById("billingState"),
+        document.getElementById("billingZip"),
+    ];
+
+    camposObrigatorios.forEach(campo => {
+        if (!campo || campo.value.trim() === "") {
+            campo.classList.add("is-invalid");
+            camposValidos = false;
+        } else {
+            campo.classList.remove("is-invalid");
+        }
+    });
+
+    return camposValidos;
+}
+
+// Função para validar o formulário de boleto
+function validarFormularioBoleto() {
+    let camposValidos = true;
+    const camposObrigatorios = [
+        document.querySelector(".payment-slip #cardName"),
+        document.querySelector(".payment-slip #cpf"),
+        document.querySelector(".payment-slip #dataNascimento"),
+    ];
+
+    camposObrigatorios.forEach(campo => {
+        if (!campo || campo.value.trim() === "") {
+            campo.classList.add("is-invalid");
+            camposValidos = false;
+        } else {
+            campo.classList.remove("is-invalid");
+        }
+    });
+
+    return camposValidos;
+}
+
+// Função para controlar o botão "Finalizar Compra"
+document.querySelector(".btn2").addEventListener("click", function () {
+    const pedidos = JSON.parse(localStorage.getItem("pedidos"));
+    if (pedidos && pedidos.formaPagamento) {
+        const metodoPagamento = pedidos.formaPagamento;
+        let formularioValido;
+
+        if (metodoPagamento === "CARTAO_CREDITO") {
+            formularioValido = validarFormularioCartaoCredito();
+        } else if (metodoPagamento === "BOLETO") {
+            formularioValido = validarFormularioBoleto();
+        }
+
+        if (formularioValido) {
+            // window.location.href = "/pages/payment.html"; // Finaliza a compra
+            console.log("Compra finalizada com sucesso!");
+        } else {
+            console.log("Por favor, preencha todos os campos obrigatórios.");
+        }
+    } else {
+        console.log("Erro ao recuperar o método de pagamento.");
+    }
 });
