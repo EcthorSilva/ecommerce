@@ -168,3 +168,102 @@ document.querySelector(".btn2").addEventListener("click", function () {
         console.log("Erro ao recuperar o método de pagamento.");
     }
 });
+
+// Função para controlar o botão "Finalizar Compra"
+document.querySelector(".btn2").addEventListener("click", function () {
+    const pedidos = JSON.parse(localStorage.getItem("pedidos"));
+    if (pedidos && pedidos.formaPagamento) {
+        const metodoPagamento = pedidos.formaPagamento;
+        let formularioValido;
+
+        if (metodoPagamento === "CARTAO_CREDITO") {
+            formularioValido = validarFormularioCartaoCredito();
+        } else if (metodoPagamento === "BOLETO") {
+            formularioValido = validarFormularioBoleto();
+        }
+
+        if (formularioValido) {
+            criarPedido();  // Chama a função para criar o pedido
+        } else {
+            console.log("Por favor, preencha todos os campos obrigatórios.");
+        }
+    } else {
+        console.log("Erro ao recuperar o método de pagamento.");
+    }
+});
+
+// Função para obter o usuário logado
+async function obterUsuarioLogado() {
+    try {
+        const response = await fetch("http://localhost:8080/api/auth/me", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao obter o usuário logado: " + response.statusText);
+        }
+
+        const usuario = await response.json();
+        return usuario;
+    } catch (error) {
+        console.error("Erro ao obter o usuário logado:", error);
+        alert("Não foi possível verificar o usuário logado.");
+        return null;
+    }
+}
+
+// Função para criar o pedido
+async function criarPedido() {
+    // Obter o pedido do localStorage
+    const pedido = JSON.parse(localStorage.getItem("pedidos"));
+    
+    // Verificar se o pedido existe e está bem estruturado
+    if (!pedido || !pedido.itens || !pedido.valorTotal || !pedido.formaPagamento) {
+        console.error("Pedido inválido ou incompleto no localStorage.");
+        return;
+    }
+
+    // Verificar se o clienteId é 0 e, se for, obter o clienteId do usuário logado utilizando a função obterUsuarioLogado
+    if (pedido.clienteId === 0) {
+        const usuarioLogado = await obterUsuarioLogado();
+        if (!usuarioLogado || !usuarioLogado.id) {
+            console.error("Usuário logado não encontrado ou inválido.");
+            return;
+        }
+        pedido.clienteId = usuarioLogado.id;
+        localStorage.setItem("pedidos", JSON.stringify(pedido));  // Atualiza o localStorage com o clienteId correto
+    }
+
+    // URL do endpoint de criação de pedido
+    const url = "http://localhost:8080/api/pedidos";
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(pedido)
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao criar o pedido: " + response.statusText);
+        }
+
+        const dadosResposta = await response.json();
+        console.log("Pedido criado com sucesso:", dadosResposta);
+
+        // Limpar o localStorage após o pedido ser enviado com sucesso (opcional)
+        localStorage.removeItem("carrinho");
+        localStorage.removeItem("pedidos");
+
+        // Redirecionar para a homepage
+        window.location.href = "/";
+    } catch (error) {
+        console.error("Erro ao enviar o pedido:", error);
+        alert("Ocorreu um erro ao criar o pedido. Por favor, tente novamente.");
+    }
+}
