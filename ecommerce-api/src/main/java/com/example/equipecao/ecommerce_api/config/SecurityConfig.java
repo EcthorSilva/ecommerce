@@ -61,7 +61,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Desabilitar CSRF para testes
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/signup","/backoffice-login", "/catalog", "/faq", "/cart", "/product", "/401", "/checkout","/api/produtos", "/api/pedidos", "/api/produtos/**", "/api/produtos/search", "/api/produtos/distribuidor/**", "/api/usuarios", "/api/clientes","/static/vendor/**", "/static/assets/**").permitAll() // Permitir acesso público à página de login, arquivos estáticos e etc
+                .requestMatchers("/", "/login", "/signup","/backoffice-login", "/catalog", "/faq", "/cart", "/product", "/401", "/checkout", "/payment/**","/api/produtos", "/api/pedidos", "/api/produtos/**", "/api/produtos/search", "/api/produtos/distribuidor/**", "/api/usuarios", "/api/clientes","/static/vendor/**", "/static/assets/**").permitAll() // Permitir acesso público à página de login, arquivos estáticos e etc
                 .requestMatchers("/backoffice", "/profile", "/api/auth/me").authenticated() // Requer autenticação para acessar o backoffice, profile e etc
                 .anyRequest().authenticated()
             )
@@ -81,7 +81,7 @@ public class SecurityConfig {
             )
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(customAuthenticationEntryPoint) // Usar o CustomAuthenticationEntryPoint
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                .accessDeniedHandler((_, response, accessDeniedException) -> {
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     PrintWriter writer = response.getWriter();
@@ -101,7 +101,7 @@ public class SecurityConfig {
     // Handlers de sucesso e falha de autenticação
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return (request, response, authentication) -> {
+        return (_, response, _) -> {
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(HttpServletResponse.SC_OK);
             PrintWriter writer = response.getWriter();
