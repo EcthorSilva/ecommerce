@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             atualizarPerfilDOM(data);
             preencherModal(data);
+            
+            // Carrega os pedidos ao carregar a página
+            carregarPedidos();
         } catch (error) {
             console.error('Erro:', error);
         }
@@ -43,6 +46,63 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.userGenero').textContent = data.genero;
         document.querySelector('.userNascimento').textContent = formatarData(data.dataNascimento);
         document.querySelector('.userGrup').textContent = data.grupo;
+    }
+
+    // Função para atualizar o DOM com os dados dos pedidos
+    function atualizarPedidosDOM(pedidos) {
+        const pedidosContainer = document.querySelector('.accordion');
+        pedidosContainer.innerHTML = ''; // Limpa pedidos anteriores
+
+        pedidos.forEach((pedido, index) => {
+            const pedidoItem = document.createElement('div');
+            pedidoItem.className = 'accordion-item';
+
+            const pedidoHeader = `
+                <div class="accordion-header d-flex align-items-center py-2">
+                    <div class="col-3 mb-0 mb-lg-0"><p class="mb-0">Numero: #${pedido.id}</p></div>
+                    <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Data: ${new Date(pedido.dataPedido).toLocaleDateString()}</p></div>
+                    <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Valor: R$ ${pedido.valorTotal.toFixed(2)}</p></div>
+                    <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${pedido.status}</p></div>
+                    <div class="col-1 mb-4 mb-lg-0">
+                        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pedido-${index}" aria-expanded="false" aria-controls="pedido-${index}">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            let itensPedido = '';
+            pedido.itens.forEach(item => {
+                itensPedido += `<p>Produto: ${item.nomeProduto} - Quantidade: ${item.quantidade} - Valor Unitário: R$ ${item.valorUnitario.toFixed(2)}</p>`;
+            });
+
+            const pedidoBody = `
+                <div id="pedido-${index}" class="accordion-collapse collapse">
+                    <div class="accordion-body">${itensPedido}</div>
+                </div>
+            `;
+
+            pedidoItem.innerHTML = pedidoHeader + pedidoBody;
+            pedidosContainer.appendChild(pedidoItem);
+        });
+    }
+
+    // Função para carregar e exibir os pedidos do usuário
+    async function carregarPedidos() {
+        try {
+            const response = await fetch(`/api/pedidos/usuario/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('Erro ao carregar pedidos');
+            const pedidos = await response.json();
+
+            atualizarPedidosDOM(pedidos);
+        } catch (error) {
+            console.error('Erro ao carregar pedidos:', error);
+        }
     }
 
     // Função para preencher o modal com os dados atuais do usuário

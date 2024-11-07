@@ -195,7 +195,7 @@ document.querySelector(".btn2").addEventListener("click", function () {
 // Função para obter o usuário logado
 async function obterUsuarioLogado() {
     try {
-        const response = await fetch("http://localhost:8080/api/auth/me", {
+        const response = await fetch(`/api/auth/me`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -238,7 +238,7 @@ async function criarPedido() {
     }
 
     // URL do endpoint de criação de pedido
-    const url = "http://localhost:8080/api/pedidos";
+    const url = `/api/pedidos`;
 
     try {
         const response = await fetch(url, {
