@@ -25,8 +25,30 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Carrega os pedidos ao carregar a página
             carregarPedidos();
+
+            // carregar o status do pedido 
+            pedidoStatus();
         } catch (error) {
             console.error('Erro:', error);
+        }
+    }
+
+    // verificar a mensagem do pedido 
+    function pedidoStatus(){
+        const pedidoStatus = JSON.parse(localStorage.getItem("pedidoStatus"));
+        if (pedidoStatus) {
+            const successToast = new bootstrap.Toast(document.getElementById("successToastPedido"));
+            const errorToast = new bootstrap.Toast(document.getElementById("errorToastPedido"));
+    
+            if (pedidoStatus.sucesso) {
+                document.querySelector("#successToastPedido .toast-body").textContent = 
+                    `Pedido ${pedidoStatus.id}, no valor de R$${pedidoStatus.valorTotal.toFixed(2)} foi realizado com sucesso!`;
+                successToast.show();
+            } else {
+                errorToast.show();
+            }
+            // Remove o pedidoStatus do localStorage após exibir o toast
+            localStorage.removeItem("pedidoStatus");
         }
     }
 
@@ -52,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function atualizarPedidosDOM(pedidos) {
         const pedidosContainer = document.querySelector('.accordion');
         const alertaPedidos = document.getElementById('alertaPedidos');
-        
+
         pedidosContainer.innerHTML = ''; // Limpa pedidos anteriores
 
         if(pedidos.length === 0) {

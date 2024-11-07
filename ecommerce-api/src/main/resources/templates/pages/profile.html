@@ -378,6 +378,30 @@
                 </div>
             </div>
         </div>
+        <!-- Toasts (Erro e Sucesso) pedido -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <!-- Toast de Erro -->
+            <div id="errorToastPedido" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Erro</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Ocorreu um erro ao finalizar o pedido.
+                </div>
+            </div>
+        
+            <!-- Toast de Sucesso -->
+            <div id="successToastPedido" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-success text-white">
+                    <strong class="me-auto">Sucesso</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <!-- Mensagem de sucesso inserida pelo JavaScript -->
+                </div>
+            </div>
+        </div>
         
         <!-- Optional: Place to the bottom of scripts -->
         <script>
