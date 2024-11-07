@@ -51,40 +51,50 @@ document.addEventListener("DOMContentLoaded", function () {
     // Função para atualizar o DOM com os dados dos pedidos
     function atualizarPedidosDOM(pedidos) {
         const pedidosContainer = document.querySelector('.accordion');
+        const alertaPedidos = document.getElementById('alertaPedidos');
+        
         pedidosContainer.innerHTML = ''; // Limpa pedidos anteriores
 
-        pedidos.forEach((pedido, index) => {
-            const pedidoItem = document.createElement('div');
-            pedidoItem.className = 'accordion-item';
+        if(pedidos.length === 0) {
+            // exibe o alerta de que não há pedidos
+            alertaPedidos.classList.remove('visually-hidden');
+        } else {
+            // esconde o alerta de que não há pedidos
+            alertaPedidos.classList.add('visually-hidden');
 
-            const pedidoHeader = `
-                <div class="accordion-header d-flex align-items-center py-2">
-                    <div class="col-3 mb-0 mb-lg-0"><p class="mb-0">Numero: #${pedido.id}</p></div>
-                    <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Data: ${new Date(pedido.dataPedido).toLocaleDateString()}</p></div>
-                    <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Valor: R$ ${pedido.valorTotal.toFixed(2)}</p></div>
-                    <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${pedido.status}</p></div>
-                    <div class="col-1 mb-4 mb-lg-0">
-                        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pedido-${index}" aria-expanded="false" aria-controls="pedido-${index}">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
+            pedidos.forEach((pedido, index) => {
+                const pedidoItem = document.createElement('div');
+                pedidoItem.className = 'accordion-item';
+    
+                const pedidoHeader = `
+                    <div class="accordion-header d-flex align-items-center py-2">
+                        <div class="col-3 mb-0 mb-lg-0"><p class="mb-0">Numero: #${pedido.id}</p></div>
+                        <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Data: ${new Date(pedido.dataPedido).toLocaleDateString()}</p></div>
+                        <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Valor: R$ ${pedido.valorTotal.toFixed(2)}</p></div>
+                        <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${pedido.status}</p></div>
+                        <div class="col-1 mb-4 mb-lg-0">
+                            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pedido-${index}" aria-expanded="false" aria-controls="pedido-${index}">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `;
-
-            let itensPedido = '';
-            pedido.itens.forEach(item => {
-                itensPedido += `<p>Produto: ${item.nomeProduto} - Quantidade: ${item.quantidade} - Valor Unitário: R$ ${item.valorUnitario.toFixed(2)}</p>`;
+                `;
+    
+                let itensPedido = '';
+                pedido.itens.forEach(item => {
+                    itensPedido += `<p>Produto: ${item.nomeProduto} - Quantidade: ${item.quantidade} - Valor Unitário: R$ ${item.valorUnitario.toFixed(2)}</p>`;
+                });
+    
+                const pedidoBody = `
+                    <div id="pedido-${index}" class="accordion-collapse collapse">
+                        <div class="accordion-body">${itensPedido}</div>
+                    </div>
+                `;
+    
+                pedidoItem.innerHTML = pedidoHeader + pedidoBody;
+                pedidosContainer.appendChild(pedidoItem);
             });
-
-            const pedidoBody = `
-                <div id="pedido-${index}" class="accordion-collapse collapse">
-                    <div class="accordion-body">${itensPedido}</div>
-                </div>
-            `;
-
-            pedidoItem.innerHTML = pedidoHeader + pedidoBody;
-            pedidosContainer.appendChild(pedidoItem);
-        });
+        }
     }
 
     // Função para carregar e exibir os pedidos do usuário
