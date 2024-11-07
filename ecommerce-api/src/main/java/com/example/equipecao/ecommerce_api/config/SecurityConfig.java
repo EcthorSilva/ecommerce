@@ -9,7 +9,9 @@
 
 package com.example.equipecao.ecommerce_api.config;
 
-import com.example.equipecao.ecommerce_api.service.CustomUserDetailsService;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +31,11 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
+import com.example.equipecao.ecommerce_api.service.CustomUserDetailsService;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -84,10 +86,10 @@ public class SecurityConfig {
                 .accessDeniedHandler((_, response, accessDeniedException) -> {
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    PrintWriter writer = response.getWriter();
-                    writer.write("{\"error\": \"Forbidden\", \"message\": \"" + accessDeniedException.getMessage() + "\"}");
-                    writer.flush();
-                    writer.close();
+                    try (PrintWriter writer = response.getWriter()) {
+                        writer.write("{\"error\": \"Forbidden\", \"message\": \"" + accessDeniedException.getMessage() + "\"}");
+                        writer.flush();
+                    }
                 })
             );
 
@@ -104,10 +106,10 @@ public class SecurityConfig {
         return (_, response, _) -> {
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(HttpServletResponse.SC_OK);
-            PrintWriter writer = response.getWriter();
-            writer.write("{\"message\": \"Login successful\"}");
-            writer.flush();
-            writer.close();
+            try (PrintWriter writer = response.getWriter()) {
+                writer.write("{\"message\": \"Login successful\"}");
+                writer.flush();
+            }
         };
     }
     // Handlers de unauthenticated e forbidden
@@ -118,10 +120,10 @@ public class SecurityConfig {
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
                 response.setContentType("application/json;charset=UTF-8");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                PrintWriter writer = response.getWriter();
-                writer.write("{\"error\": \"Unauthorized\", \"message\": \"" + exception.getMessage() + "\"}");
-                writer.flush();
-                writer.close();
+                try (PrintWriter writer = response.getWriter()) {
+                    writer.write("{\"error\": \"Unauthorized\", \"message\": \"" + exception.getMessage() + "\"}");
+                    writer.flush();
+                }
             }
         };
     }
@@ -133,10 +135,10 @@ public class SecurityConfig {
             public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                 response.setContentType("application/json;charset=UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
-                PrintWriter writer = response.getWriter();
-                writer.write("{\"message\": \"Logout successful\"}");
-                writer.flush();
-                writer.close();
+                try (PrintWriter writer = response.getWriter()) {
+                    writer.write("{\"message\": \"Logout successful\"}");
+                    writer.flush();
+                }
             }
         };
     }

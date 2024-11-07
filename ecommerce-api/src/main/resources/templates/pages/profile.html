@@ -220,92 +220,12 @@
                                     <div class="card-header py-3 d-flex justify-content-between align-items-baseline ">
                                         <h5 class="mb-0">ultimos pedidos</h5>
                                     </div>
-                                    <div class="card-body text-center">
+                                    <div class="card-body text-center" style="min-height: 185px;">
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
-                                            <div class="accordion-item">
-                                                <div class="accordion-header d-flex align-items-center py-2">
-                                                    <div class="col-3 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Numero: #33308833</p>
-                                                    </div>
-                                                    <div class="col-2 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Data: 20/10/2024</p>
-                                                    </div>
-                                                    <div class="col-2 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Valor: R$ 6,29</p>
-                                                    </div>
-                                                    <div class="col-4 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Status: Aguardando Pagamento</p>
-                                                    </div>
-                                                    <div class="col-1 mb-4 mb-lg-0">
-                                                        <button class="btn" type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                                                        aria-controls="panelsStayOpen-collapseOne">
-                                                        <i class="bi bi-three-dots-vertical"></i>
-                                                    </button>
-                                                    </div>
-                                                </div>
-                                                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
-                                                    <div class="accordion-body">
-                                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia accusamus, ab possimus totam facere eaque rerum beatae ex. Delectus eum optio molestias? Hic sunt nobis alias fuga dolore exercitationem natus?</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="accordion-item">
-                                                <div class="accordion-header d-flex align-items-center py-2">
-                                                    <div class="col-3 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Numero: #33308833</p>
-                                                    </div>
-                                                    <div class="col-2 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Data: 20/10/2024</p>
-                                                    </div>
-                                                    <div class="col-2 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Valor: R$ 6,29</p>
-                                                    </div>
-                                                    <div class="col-4 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Status: Aguardando Pagamento</p>
-                                                    </div>
-                                                    <div class="col-1 mb-4 mb-lg-0">
-                                                        <button class="btn" type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
-                                                        aria-controls="panelsStayOpen-collapseTwo">
-                                                        <i class="bi bi-three-dots-vertical"></i>
-                                                    </button>
-                                                    </div>
-                                                </div>
-                                                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
-                                                    <div class="accordion-body">
-                                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia accusamus, ab possimus totam facere eaque rerum beatae ex. Delectus eum optio molestias? Hic sunt nobis alias fuga dolore exercitationem natus?</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="accordion-item">
-                                                <div class="accordion-header d-flex align-items-center py-2">
-                                                    <div class="col-3 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Numero: #33308833</p>
-                                                    </div>
-                                                    <div class="col-2 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Data: 20/10/2024</p>
-                                                    </div>
-                                                    <div class="col-2 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Valor: R$ 6,29</p>
-                                                    </div>
-                                                    <div class="col-4 mb-0 mb-lg-0">
-                                                        <p class="mb-0">Status: Aguardando Pagamento</p>
-                                                    </div>
-                                                    <div class="col-1 mb-4 mb-lg-0">
-                                                        <button class="btn" type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
-                                                        aria-controls="panelsStayOpen-collapseThree">
-                                                        <i class="bi bi-three-dots-vertical"></i>
-                                                    </button>
-                                                    </div>
-                                                </div>
-                                                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
-                                                    <div class="accordion-body">
-                                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia accusamus, ab possimus totam facere eaque rerum beatae ex. Delectus eum optio molestias? Hic sunt nobis alias fuga dolore exercitationem natus?</p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <!-- lista os pedidos aqui -->
+                                        </div>
+                                        <div class="d-flex justify-content-center my-5 mx-5 " id="alertaPedidos" role="alert">
+                                            <strong>Você ainda não tem nenhum pedido</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -455,6 +375,30 @@
                 </div>
                 <div class="toast-body">
                     Dados alterados com sucesso!
+                </div>
+            </div>
+        </div>
+        <!-- Toasts (Erro e Sucesso) pedido -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <!-- Toast de Erro -->
+            <div id="errorToastPedido" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Erro</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Ocorreu um erro ao finalizar o pedido.
+                </div>
+            </div>
+        
+            <!-- Toast de Sucesso -->
+            <div id="successToastPedido" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-success text-white">
+                    <strong class="me-auto">Sucesso</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <!-- Mensagem de sucesso inserida pelo JavaScript -->
                 </div>
             </div>
         </div>

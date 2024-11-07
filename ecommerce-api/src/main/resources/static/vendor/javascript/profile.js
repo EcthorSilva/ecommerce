@@ -22,8 +22,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
             atualizarPerfilDOM(data);
             preencherModal(data);
+            
+            // Carrega os pedidos ao carregar a página
+            carregarPedidos();
+
+            // carregar o status do pedido 
+            pedidoStatus();
         } catch (error) {
             console.error('Erro:', error);
+        }
+    }
+
+    // verificar a mensagem do pedido 
+    function pedidoStatus(){
+        const pedidoStatus = JSON.parse(localStorage.getItem("pedidoStatus"));
+        if (pedidoStatus) {
+            const successToast = new bootstrap.Toast(document.getElementById("successToastPedido"));
+            const errorToast = new bootstrap.Toast(document.getElementById("errorToastPedido"));
+    
+            if (pedidoStatus.sucesso) {
+                document.querySelector("#successToastPedido .toast-body").textContent = 
+                    `Pedido ${pedidoStatus.id}, no valor de R$${pedidoStatus.valorTotal.toFixed(2)} foi realizado com sucesso!`;
+                successToast.show();
+            } else {
+                errorToast.show();
+            }
+            // Remove o pedidoStatus do localStorage após exibir o toast
+            localStorage.removeItem("pedidoStatus");
         }
     }
 
@@ -43,6 +68,91 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.userGenero').textContent = data.genero;
         document.querySelector('.userNascimento').textContent = formatarData(data.dataNascimento);
         document.querySelector('.userGrup').textContent = data.grupo;
+    }
+
+    // Função para formatar o status dos pedidos
+    function formatarStatusPedido(status) {
+        switch (status) {
+            case 'AGUARDANDO_PAGAMENTO':
+                return 'Aguardando Pagamento';
+            case 'PAGO':
+                return 'Pago';
+            case 'ENVIADO':
+                return 'Enviado';
+            case 'ENTREGUE':
+                return 'Entregue';
+            case 'CANCELADO':
+                return 'Cancelado';
+            default:
+                return status;
+        }
+    }
+
+    // Função para atualizar o DOM com os dados dos pedidos
+    function atualizarPedidosDOM(pedidos) {
+        const pedidosContainer = document.querySelector('.accordion');
+        const alertaPedidos = document.getElementById('alertaPedidos');
+
+        pedidosContainer.innerHTML = ''; // Limpa pedidos anteriores
+
+        if(pedidos.length === 0) {
+            // exibe o alerta de que não há pedidos
+            alertaPedidos.classList.remove('visually-hidden');
+        } else {
+            // esconde o alerta de que não há pedidos
+            alertaPedidos.classList.add('visually-hidden');
+
+            pedidos.forEach((pedido, index) => {
+                const pedidoItem = document.createElement('div');
+                pedidoItem.className = 'accordion-item';
+    
+                const pedidoHeader = `
+                    <div class="accordion-header d-flex align-items-center py-2">
+                        <div class="col-3 mb-0 mb-lg-0"><p class="mb-0">Numero: #${pedido.id}</p></div>
+                        <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Data: ${new Date(pedido.dataPedido).toLocaleDateString()}</p></div>
+                        <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Valor: R$ ${pedido.valorTotal.toFixed(2)}</p></div>
+                        <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${formatarStatusPedido(pedido.status)}</p></div>
+                        <div class="col-1 mb-4 mb-lg-0">
+                            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pedido-${index}" aria-expanded="false" aria-controls="pedido-${index}">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+    
+                let itensPedido = '';
+                pedido.itens.forEach(item => {
+                    itensPedido += `<p>Produto: ${item.nomeProduto} - Quantidade: ${item.quantidade} - Valor Unitário: R$ ${item.valorUnitario.toFixed(2)}</p>`;
+                });
+    
+                const pedidoBody = `
+                    <div id="pedido-${index}" class="accordion-collapse collapse">
+                        <div class="accordion-body">${itensPedido}</div>
+                    </div>
+                `;
+    
+                pedidoItem.innerHTML = pedidoHeader + pedidoBody;
+                pedidosContainer.appendChild(pedidoItem);
+            });
+        }
+    }
+
+    // Função para carregar e exibir os pedidos do usuário
+    async function carregarPedidos() {
+        try {
+            const response = await fetch(`/api/pedidos/usuario/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('Erro ao carregar pedidos');
+            const pedidos = await response.json();
+
+            atualizarPedidosDOM(pedidos);
+        } catch (error) {
+            console.error('Erro ao carregar pedidos:', error);
+        }
     }
 
     // Função para preencher o modal com os dados atuais do usuário

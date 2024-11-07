@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Requisição para obter os e-mails do usuário
-    fetch("http://localhost:8080/api/auth/me")
+    fetch(`/api/auth/me`)
         .then(response => response.json())
         .then(data => {
             const emailSelect = document.getElementById("emailSelect");

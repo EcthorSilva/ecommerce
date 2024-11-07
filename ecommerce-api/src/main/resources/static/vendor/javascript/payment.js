@@ -195,7 +195,7 @@ document.querySelector(".btn2").addEventListener("click", function () {
 // Função para obter o usuário logado
 async function obterUsuarioLogado() {
     try {
-        const response = await fetch("http://localhost:8080/api/auth/me", {
+        const response = await fetch(`/api/auth/me`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -238,7 +238,7 @@ async function criarPedido() {
     }
 
     // URL do endpoint de criação de pedido
-    const url = "http://localhost:8080/api/pedidos";
+    const url = `/api/pedidos`;
 
     try {
         const response = await fetch(url, {
@@ -256,14 +256,26 @@ async function criarPedido() {
         const dadosResposta = await response.json();
         console.log("Pedido criado com sucesso:", dadosResposta);
 
-        // Limpar o localStorage após o pedido ser enviado com sucesso (opcional)
+        // Salva as informações de sucesso no localStorage para o toast
+        localStorage.setItem("pedidoStatus", JSON.stringify({
+            id: dadosResposta.id,
+            valorTotal: pedido.valorTotal,
+            sucesso: true
+        }));
+
+        // Limpar o localStorage após o pedido ser enviado com sucesso
         localStorage.removeItem("carrinho");
         localStorage.removeItem("pedidos");
 
-        // Redirecionar para a homepage
-        window.location.href = "/";
+        // Redirecionar para a profile
+        window.location.href = "/profile";
     } catch (error) {
         console.error("Erro ao enviar o pedido:", error);
         alert("Ocorreu um erro ao criar o pedido. Por favor, tente novamente.");
+
+        // Salva uma mensagem de erro no localStorage para o toast
+        localStorage.setItem("pedidoStatus", JSON.stringify({
+            sucesso: false
+        }));
     }
 }
