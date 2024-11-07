@@ -70,6 +70,24 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.userGrup').textContent = data.grupo;
     }
 
+    // Função para formatar o status dos pedidos
+    function formatarStatusPedido(status) {
+        switch (status) {
+            case 'AGUARDANDO_PAGAMENTO':
+                return 'Aguardando Pagamento';
+            case 'PAGO':
+                return 'Pago';
+            case 'ENVIADO':
+                return 'Enviado';
+            case 'ENTREGUE':
+                return 'Entregue';
+            case 'CANCELADO':
+                return 'Cancelado';
+            default:
+                return status;
+        }
+    }
+
     // Função para atualizar o DOM com os dados dos pedidos
     function atualizarPedidosDOM(pedidos) {
         const pedidosContainer = document.querySelector('.accordion');
@@ -93,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div class="col-3 mb-0 mb-lg-0"><p class="mb-0">Numero: #${pedido.id}</p></div>
                         <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Data: ${new Date(pedido.dataPedido).toLocaleDateString()}</p></div>
                         <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Valor: R$ ${pedido.valorTotal.toFixed(2)}</p></div>
-                        <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${pedido.status}</p></div>
+                        <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${formatarStatusPedido(pedido.status)}</p></div>
                         <div class="col-1 mb-4 mb-lg-0">
                             <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pedido-${index}" aria-expanded="false" aria-controls="pedido-${index}">
                                 <i class="bi bi-three-dots-vertical"></i>
