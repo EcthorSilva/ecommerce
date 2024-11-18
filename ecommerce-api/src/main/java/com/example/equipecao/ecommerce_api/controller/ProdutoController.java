@@ -9,12 +9,14 @@
 
 package com.example.equipecao.ecommerce_api.controller;
 
-import com.example.equipecao.ecommerce_api.model.Categoria;
-import com.example.equipecao.ecommerce_api.model.ImagemProduto;
-import com.example.equipecao.ecommerce_api.model.Produto;
-import com.example.equipecao.ecommerce_api.repository.ProdutoRepository;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,11 +24,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
+import com.example.equipecao.ecommerce_api.model.Categoria;
+import com.example.equipecao.ecommerce_api.model.ImagemProduto;
+import com.example.equipecao.ecommerce_api.model.Produto;
+import com.example.equipecao.ecommerce_api.repository.ProdutoRepository;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -34,7 +51,7 @@ import java.util.Optional;
 public class ProdutoController {
 
     @Autowired
-    private ProdutoRepository repository;
+    private ProdutoRepository repository; 
 
     // buscar todos os produtos
     @GetMapping
@@ -130,24 +147,49 @@ public class ProdutoController {
 
     // imagens 
 
-    // adicionar imagem a um produto 
+    // adicionar imagem a um produto
     @PostMapping("/{id}/imagens")
-    public ResponseEntity<String> addImagem(@PathVariable long id, @Valid @RequestBody ImagemProduto imagemProduto) {
-        Optional<Produto> produtoOpt = repository.findById(id);
-        if (produtoOpt.isPresent()) {
-            Produto produto = produtoOpt.get();
-            
-            // Se a imagem for principal, desmarcar outras imagens principais
-            if (imagemProduto.isPrincipal()) {
-                produto.getImagens().forEach(imagem -> imagem.setPrincipal(false));
+    public ResponseEntity<ImagemProduto> uploadImagem(@PathVariable Long id, @RequestParam("imagem") MultipartFile imagem, @RequestParam("principal") boolean principal) {
+        try {
+            Optional<Produto> produtoOptional = repository.findById(id);
+            if (!produtoOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            
+
+            Produto produto = produtoOptional.get();
+
+            // Gerar um nome de pasta baseado no nome do produto
+            String nomeProduto = produto.getNome().replaceAll("[^a-zA-Z0-9]", "_"); // Substituir caracteres especiais por _
+            String pastaProduto = nomeProduto + "_" + produto.getId();
+            String diretorio = "src/main/resources/static/assets/images/produto/" + pastaProduto + "/";
+            Path caminhoDiretorio = Paths.get(diretorio);
+
+            // Cria o diretório se não existir
+            if (!Files.exists(caminhoDiretorio)) {
+                Files.createDirectories(caminhoDiretorio);
+            }
+
+            // Renomear a imagem para evitar conflitos
+            String nomeArquivo = UUID.randomUUID().toString() + "_" + imagem.getOriginalFilename();
+            Path caminhoArquivo = caminhoDiretorio.resolve(nomeArquivo);
+
+            // Salva o arquivo no diretório
+            Files.copy(imagem.getInputStream(), caminhoArquivo);
+
+            // Cria a entidade ImagemProduto
+            ImagemProduto imagemProduto = new ImagemProduto();
+            imagemProduto.setDiretorio("/static/assets/images/produto/" + pastaProduto + "/");
+            imagemProduto.setNomeImagem(nomeArquivo);
+            imagemProduto.setPrincipal(principal);
             imagemProduto.setProduto(produto);
+
+            // Adiciona a imagem ao produto e salva no banco de dados
             produto.getImagens().add(imagemProduto);
             repository.save(produto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Imagem adicionada com sucesso.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(imagemProduto);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 

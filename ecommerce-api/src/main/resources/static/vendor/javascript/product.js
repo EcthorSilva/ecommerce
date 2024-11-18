@@ -52,6 +52,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
 
+    // Função auxiliar para corrigir o diretório das imagens
+    function corrigirDiretorioImagem(diretorio, nomeImagem) {
+        // Verifica se o caminho é do padrão "/static/assets/images/produto/"
+        if (diretorio.includes("/static/assets/images/produto/")) {
+            return `${diretorio}${nomeImagem}`; // Retorna o caminho completo
+        }
+        // Se o diretório for "/imagens/produtos/"
+        return nomeImagem; // Retorna apenas o nome da imagem
+    }
+
     // Função para exibir os detalhes do produto na página
     function exibirProduto(produto) {
         const produtoPreco = document.getElementById('produto-preco');
@@ -81,10 +91,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // Atualiza a imagem de banner
         const imgBanner = document.querySelector('.img-fluid.border.rounded');
-        if (imgBanner) {
-            imgBanner.src = produto.imgUrl;
+        if (produto.imgUrl === "https://via.placeholder.com/292x136") {
+            const imagemPrincipal = produto.imagens.find(imagem => imagem.principal);
+            if (imagemPrincipal) {
+                imgBanner.src = corrigirDiretorioImagem(imagemPrincipal.diretorio, imagemPrincipal.nomeImagem);
+            } else {
+                console.error("Nenhuma imagem principal encontrada para o produto.");
+            }
         } else {
-            console.error("Elemento da imagem do banner não encontrado");
+            imgBanner.src = produto.imgUrl;
         }
 
         // Atualizar o ícone da categoria
@@ -99,7 +114,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         carouselInner.innerHTML = '';
         carouselIndicators.innerHTML = '';
 
-        produto.imagens.forEach((imagem, index) => {
+        const imagensNaoPrincipais = produto.imagens.filter(imagem => !imagem.principal);
+        imagensNaoPrincipais.forEach((imagem, index) => {
             const indicator = document.createElement('button');
             indicator.type = 'button';
             indicator.dataset.bsTarget = '#carouselExample';
@@ -113,9 +129,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const carouselItem = document.createElement('div');
             carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+
             const img = document.createElement('img');
-            img.src = imagem.nomeImagem;
+            img.src = corrigirDiretorioImagem(imagem.diretorio, imagem.nomeImagem);
             img.className = 'd-block w-100';
+
             carouselItem.appendChild(img);
             carouselInner.appendChild(carouselItem);
         });

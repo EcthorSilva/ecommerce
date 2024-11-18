@@ -40,12 +40,26 @@ function adicionarCards(produtos, containerId) {
             container.appendChild(row);
         }
 
+        // Verifica se imgUrl é placeholder e define a imagem a ser usada
+        let imagemProduto;
+        if (produto.imgUrl === "https://via.placeholder.com/292x136") {
+            const imagemPrincipal = produto.imagens.find(imagem => imagem.principal);
+            if (imagemPrincipal) {
+                imagemProduto = `${imagemPrincipal.diretorio}${imagemPrincipal.nomeImagem}`;
+            } else {
+                console.error("Nenhuma imagem principal encontrada para o produto.");
+                imagemProduto = produto.imgUrl; // Fallback para a URL padrão
+            }
+        } else {
+            imagemProduto = produto.imgUrl;
+        }
+
         const col = document.createElement('div');
         col.className = 'col-lg-4 col-md-6 mb-4 mb-lg-0';
 
         col.innerHTML = `
             <div class="card">
-                <img src="${produto.imgUrl}" alt="Imagem do Produto" class="card-img-top" style="cursor: pointer">
+                <img src="${imagemProduto}" alt="Imagem do Produto" class="card-img-top" style="cursor: pointer">
                 <div class="card-body">
                     <h5 class="card-title text-truncate" style="cursor: pointer">${produto.nome}</h5>
                     ${getCategoriaIcon(produto.categoria)}&nbsp;
@@ -65,7 +79,7 @@ function adicionarCards(produtos, containerId) {
                         data-preco="${produto.preco}" 
                         data-precoComDesconto="${produto.precoComDesconto}" 
                         data-temDesconto="${produto.temDesconto}" 
-                        data-imgUrl="${produto.imgUrl}">
+                        data-imgUrl="${imagemProduto}">
                         <i class="bi bi-cart-plus"> adicionar</i>
                     </button>
                 </div>
@@ -101,6 +115,7 @@ function adicionarCards(produtos, containerId) {
         });
     });
 }
+
 
 // Função para redirecionar para a página do produto
 function redirecionarParaProduto(produtoId) {

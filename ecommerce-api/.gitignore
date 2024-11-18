@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Permite rastrear a pasta 'produto/' mas ignora as subpastas e seus conteúdos
+!src/main/resources/static/assets/images/produto/
+src/main/resources/static/assets/images/produto/*/
