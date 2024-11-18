@@ -149,7 +149,7 @@ public class ProdutoController {
 
     // adicionar imagem a um produto
     @PostMapping("/{id}/imagens")
-    public ResponseEntity<ImagemProduto> uploadImagem(@PathVariable Long id, @RequestParam("imagem") MultipartFile imagem) {
+    public ResponseEntity<ImagemProduto> uploadImagem(@PathVariable Long id, @RequestParam("imagem") MultipartFile imagem, @RequestParam("principal") boolean principal) {
         try {
             Optional<Produto> produtoOptional = repository.findById(id);
             if (!produtoOptional.isPresent()) {
@@ -180,7 +180,7 @@ public class ProdutoController {
             ImagemProduto imagemProduto = new ImagemProduto();
             imagemProduto.setDiretorio("/static/assets/images/produto/" + pastaProduto + "/");
             imagemProduto.setNomeImagem(nomeArquivo);
-            imagemProduto.setPrincipal(false);
+            imagemProduto.setPrincipal(principal);
             imagemProduto.setProduto(produto);
 
             // Adiciona a imagem ao produto e salva no banco de dados

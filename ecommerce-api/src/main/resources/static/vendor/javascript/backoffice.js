@@ -177,13 +177,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const distribuidorProduto = document.getElementById('distribuidorProduto').value;
         const avaliacaoProduto = document.getElementById('avaliacaoProduto').value;
         const descricaoProduto = document.getElementById('descricaoProduto').value;
-
+        const imagemCapaProduto = document.getElementById('imagemCapaProduto').files[0];
+        const imagens = document.getElementById('imagemProduto').files;
+    
         // Validação simples dos campos
         if (!nomeProduto || !quantidadeProduto || !valorProduto || !categoriaProduto || !distribuidorProduto || !descricaoProduto) {
             alert("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
-
+    
         // Monta o payload para o produto
         const produtoData = {
             categoria: categoriaProduto,
@@ -199,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
             quantidadeEmEstoque: parseInt(quantidadeProduto),
             ativo: statusProduto
         };
-
+    
         try {
             // Envia o produto para o backend
             const produtoResponse = await fetch('http://localhost:8080/api/produtos', {
@@ -207,24 +209,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(produtoData)
             });
-
+    
             if (!produtoResponse.ok) {
                 throw new Error('Erro ao cadastrar o produto.');
             }
-
+    
             // Obtém a resposta como texto
             const responseText = await produtoResponse.text();
-
+    
             // Extrai o ID do texto retornado
             const produtoIdMatch = responseText.match(/ID:\s*(\d+)/);
             if (!produtoIdMatch) {
                 throw new Error('Erro ao extrair o ID do produto da resposta.');
             }
             const produtoId = produtoIdMatch[1]; // ID do produto extraído
-
-            // Upload das imagens
-            const imagensSalvas = await uploadImagens(produtoId);
-
+    
+            // Upload da imagem da capa
+            if (imagemCapaProduto) {
+                await uploadImagem(produtoId, imagemCapaProduto, true);
+            }
+    
+            // Upload das demais imagens
+            const imagensSalvas = await uploadImagens(produtoId, imagens);
+    
             if (imagensSalvas) {
                 alert('Produto cadastrado com sucesso!');
                 // Reseta o formulário e o carrossel
@@ -235,26 +242,16 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Ocorreu um erro ao cadastrar o produto. Tente novamente.');
         }
     });
-
+    
     // Função para fazer upload das imagens
-    async function uploadImagens(produtoId) {
+    async function uploadImagens(produtoId, imagens) {
         if (imagens.length === 0) return true;
-
+    
         try {
             for (let i = 0; i < imagens.length; i++) {
-                const formData = new FormData();
-                formData.append('imagem', imagens[i]);
-
-                const response = await fetch(`http://localhost:8080/api/produtos/${produtoId}/imagens`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Erro ao salvar a imagem ${i + 1}.`);
-                }
+                await uploadImagem(produtoId, imagens[i], false);
             }
-
+    
             return true;
         } catch (error) {
             console.error(error);
@@ -262,7 +259,24 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
     }
-
+    
+    // Função para fazer upload de uma imagem
+    async function uploadImagem(produtoId, imagem, principal) {
+        const formData = new FormData();
+        formData.append('imagem', imagem);
+        formData.append('diretorio', '/imagens/produtos/');
+        formData.append('principal', principal);
+    
+        const response = await fetch(`http://localhost:8080/api/produtos/${produtoId}/imagens`, {
+            method: 'POST',
+            body: formData
+        });
+    
+        if (!response.ok) {
+            throw new Error('Erro ao salvar a imagem.');
+        }
+    }
+    
     // Lógica para exibir as imagens selecionadas
     document.getElementById('imagemProduto').addEventListener('change', (event) => {
         const files = event.target.files;
