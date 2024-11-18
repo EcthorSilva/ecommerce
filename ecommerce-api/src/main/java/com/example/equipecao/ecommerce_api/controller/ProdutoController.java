@@ -159,8 +159,7 @@ public class ProdutoController {
             Produto produto = produtoOptional.get();
 
             // Gerar um nome de pasta baseado no nome do produto
-            String nomeProduto = produto.getNome().replaceAll("[^a-zA-Z0-9]", "_"); // Substituir caracteres especiais
-                                                                                    // por _
+            String nomeProduto = produto.getNome().replaceAll("[^a-zA-Z0-9]", "_"); // Substituir caracteres especiais por _
             String pastaProduto = nomeProduto + "_" + produto.getId();
             String diretorio = "src/main/resources/static/assets/images/produto/" + pastaProduto + "/";
             Path caminhoDiretorio = Paths.get(diretorio);
@@ -190,7 +189,6 @@ public class ProdutoController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(imagemProduto);
         } catch (IOException e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

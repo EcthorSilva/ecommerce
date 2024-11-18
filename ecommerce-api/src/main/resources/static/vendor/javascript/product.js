@@ -100,6 +100,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         carouselIndicators.innerHTML = '';
 
         produto.imagens.forEach((imagem, index) => {
+            // gambiarra 
+            /**
+             * Alguns produtos ainda não possuem imagens salvas localmente, 
+             * esse trexo do codigo verifica se o erro 404 causado pela foto local aparece
+             * caso sim ele corrige a variavel para juntar diretorio com o nome da imagem 
+             * 
+             * ISSO SERÁ CORRIGIDO NA PROXIMA PR
+             */
             const indicator = document.createElement('button');
             indicator.type = 'button';
             indicator.dataset.bsTarget = '#carouselExample';
@@ -113,9 +121,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const carouselItem = document.createElement('div');
             carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+
             const img = document.createElement('img');
-            img.src = imagem.nomeImagem;
+            img.src = imagem.nomeImagem; // URL inicial
             img.className = 'd-block w-100';
+
+            // Tratamento de erro 404
+            img.addEventListener('error', () => {
+                console.warn(`Erro ao carregar imagem: ${imagem.nomeImagem}. Tentando outra URL.`);
+                img.src = `${imagem.diretorio}${imagem.nomeImagem}`; // Combina diretório e nomeImagem
+            });
+
             carouselItem.appendChild(img);
             carouselInner.appendChild(carouselItem);
         });
