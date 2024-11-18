@@ -295,7 +295,7 @@
         </div>
 
         <!-- Modal Cadastro de Produto -->
-        <div class="modal fade" id="modalProduto" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalProdutoLabel" aria-hidden="true">
+        <div class="modal fade" style="--bs-modal-width: 700px;" id="modalProduto" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalProdutoLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -308,26 +308,88 @@
                                 <label for="nomeProduto" class="form-label">Nome do Produto</label>
                                 <input type="text" class="form-control" id="nomeProduto" placeholder="Nome">
                             </div>
-                            <div class="mb-3">
-                                <label for="quantidadeProduto" class="form-label">Quantidade</label>
-                                <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="quantidadeProduto" class="form-label">Quantidade</label>
+                                    <input type="number" class="form-control" id="quantidadeProduto" placeholder="Quantidade">
+                                </div>
+                                <div class="col">
+                                    <label for="valorProduto" class="form-label">Valor</label>
+                                    <input type="number" class="form-control" id="valorProduto" placeholder="Valor">
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label for="valorProduto" class="form-label">Valor</label>
-                                <input type="number" class="form-control" id="valorProduto" placeholder="Valor">
-                            </div>
-                            <div class="mb-3">
-                                <label for="statusProduto" class="form-label">Status</label>
-                                <select class="form-control" id="statusProduto">
-                                    <option>Ativo</option>
-                                    <option>Inativo</option>
+                                <label for="temDescontoProduto" class="form-label">Tem Desconto</label>
+                                <select class="form-control" id="temDescontoProduto">
+                                    <option>Não</option>
+                                    <option>Sim</option>
                                 </select>
                             </div>
+                            <div class="mb-3" id="valorProdutoDescontoContainer" style="display: none;">
+                                <label for="valorProdutoDesconto" class="form-label">Valor com Desconto</label>
+                                <input type="number" class="form-control" id="valorProdutoDesconto" placeholder="Valor com desconto">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="statusProduto" class="form-label">Status</label>
+                                    <select class="form-control" id="statusProduto">
+                                        <option>Ativo</option>
+                                        <option>Inativo</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="categoriaProduto" class="form-label">Categoria</label>
+                                    <select class="form-control" id="categoriaProduto">
+                                        <option>WINDOWS</option>
+                                        <option>STEAM</option>
+                                        <option>PLAYSTATION</option>
+                                        <option>XBOX</option> 
+                                        <option>OUTROS</option> 
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="distribuidorProduto" class="form-label">Distribuidor do Produto</label>
+                                <input type="text" class="form-control" id="distribuidorProduto" placeholder="Distribuidor">
+                            </div>
+                            <div class="mb-3">
+                                <label for="avaliacaoProduto" class="form-label">Avaliação</label>
+                                <select class="form-control" id="avaliacaoProduto">
+                                    <option>0</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option> 
+                                    <option>4</option> 
+                                    <option>5</option> 
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descricaoProduto" class="form-label">Descrição do Produto</label>
+                                <input type="text" class="form-control" id="descricaoProduto" placeholder="Descricao">
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagemProduto" class="form-label">Imagens do Produto</label>
+                                <input type="file" class="form-control" id="imagemProduto" accept="image/*" multiple>
+                            </div>
+                            <div id="carouselImagens" class="carousel slide" data-bs-ride="carousel" style="display: none;">
+                                <div class="carousel-inner" id="carouselInner"></div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImagens" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselImagens" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>              
                         </form>
+                        <div class="alert alert-danger d-flex justify-content-center mt-4 visually-hidden" role="alert">
+                            <strong>erro</strong>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary">Salvar</button>
+                        <button type="button" class="btn btn-secondary" id="cancelaProduto" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="SalvarProduto">Salvar</button>
                     </div>
                 </div>
             </div>

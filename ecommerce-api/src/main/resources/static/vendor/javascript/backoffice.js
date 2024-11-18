@@ -165,7 +165,149 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /* Produtos */ 
+    /* Produtos */
+    document.getElementById('SalvarProduto').addEventListener('click', async () => {
+        const nomeProduto = document.getElementById('nomeProduto').value;
+        const quantidadeProduto = document.getElementById('quantidadeProduto').value;
+        const valorProduto = document.getElementById('valorProduto').value;
+        const temDescontoProduto = document.getElementById('temDescontoProduto').value === 'Sim';
+        const valorProdutoDesconto = document.getElementById('valorProdutoDesconto').value || 0;
+        const statusProduto = document.getElementById('statusProduto').value === 'Ativo';
+        const categoriaProduto = document.getElementById('categoriaProduto').value;
+        const distribuidorProduto = document.getElementById('distribuidorProduto').value;
+        const avaliacaoProduto = document.getElementById('avaliacaoProduto').value;
+        const descricaoProduto = document.getElementById('descricaoProduto').value;
+
+        // Validação simples dos campos
+        if (!nomeProduto || !quantidadeProduto || !valorProduto || !categoriaProduto || !distribuidorProduto || !descricaoProduto) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        // Monta o payload para o produto
+        const produtoData = {
+            categoria: categoriaProduto,
+            nome: nomeProduto,
+            distribuidor: distribuidorProduto,
+            preco: parseFloat(valorProduto),
+            temDesconto: temDescontoProduto,
+            precoComDesconto: temDescontoProduto ? parseFloat(valorProdutoDesconto) : null,
+            parcelas: 3, // Por padrão, definimos 3 parcelas
+            imgUrl: "https://via.placeholder.com/292x136", // Será atualizado após o upload das imagens
+            avaliacao: parseInt(avaliacaoProduto),
+            descricaoDetalhada: descricaoProduto,
+            quantidadeEmEstoque: parseInt(quantidadeProduto),
+            ativo: statusProduto
+        };
+
+        try {
+            // Envia o produto para o backend
+            const produtoResponse = await fetch('http://localhost:8080/api/produtos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(produtoData)
+            });
+
+            if (!produtoResponse.ok) {
+                throw new Error('Erro ao cadastrar o produto.');
+            }
+
+            // Obtém a resposta como texto
+            const responseText = await produtoResponse.text();
+
+            // Extrai o ID do texto retornado
+            const produtoIdMatch = responseText.match(/ID:\s*(\d+)/);
+            if (!produtoIdMatch) {
+                throw new Error('Erro ao extrair o ID do produto da resposta.');
+            }
+            const produtoId = produtoIdMatch[1]; // ID do produto extraído
+
+            // Upload das imagens
+            const imagensSalvas = await uploadImagens(produtoId);
+
+            if (imagensSalvas) {
+                alert('Produto cadastrado com sucesso!');
+                // Reseta o formulário e o carrossel
+                cancelarProduto.click();
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Ocorreu um erro ao cadastrar o produto. Tente novamente.');
+        }
+    });
+
+    // Função para fazer upload das imagens
+    async function uploadImagens(produtoId) {
+        if (imagens.length === 0) return true;
+
+        try {
+            for (let i = 0; i < imagens.length; i++) {
+                const formData = new FormData();
+                formData.append('imagem', imagens[i]);
+
+                const response = await fetch(`http://localhost:8080/api/produtos/${produtoId}/imagens`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao salvar a imagem ${i + 1}.`);
+                }
+            }
+
+            return true;
+        } catch (error) {
+            console.error(error);
+            alert('Ocorreu um erro ao salvar as imagens.');
+            return false;
+        }
+    }
+
+    // Lógica para exibir as imagens selecionadas
+    document.getElementById('imagemProduto').addEventListener('change', (event) => {
+        const files = event.target.files;
+
+        if (files.length > 0) {
+            imagens = Array.from(files); // Salva diretamente os arquivos
+
+            const carouselInner = document.getElementById('carouselInner');
+            carouselInner.innerHTML = ''; // Limpa o carrossel anterior
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    const imgSrc = e.target.result;
+
+                    // Cria o item do carrossel
+                    const carouselItem = document.createElement('div');
+                    carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+                    carouselItem.innerHTML = `<img src="${imgSrc}" class="d-block w-100 img-thumbnail" alt="Imagem ${index + 1}">`;
+                    carouselInner.appendChild(carouselItem);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+    });
+
+    // Função para exibir o campo de desconto
+    document.getElementById("temDescontoProduto").addEventListener("change", function () {
+        const valorProdutoDescontoContainer = document.getElementById("valorProdutoDescontoContainer");
+        if (this.value === "Sim") {
+            valorProdutoDescontoContainer.style.display = "block";
+        } else {
+            valorProdutoDescontoContainer.style.display = "none";
+        }
+    });
+
+    const cancelarProduto = document.getElementById('cancelaProduto');
+    cancelarProduto.addEventListener('click', function () {
+        imagens = []; // Limpa as imagens no array
+        carouselInner.innerHTML = ''; // Limpa o carrossel
+        carouselImagens.style.display = 'none'; // Esconde o carrossel
+        imagemProdutoInput.value = ''; // Reseta o input de arquivos
+    });
+
     // Função para carregar produtos
     async function carregarProdutos(pagina = 0) {
         try {
