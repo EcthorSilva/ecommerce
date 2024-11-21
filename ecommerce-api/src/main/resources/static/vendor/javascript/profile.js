@@ -95,48 +95,72 @@ document.addEventListener("DOMContentLoaded", function () {
 
         pedidosContainer.innerHTML = ''; // Limpa pedidos anteriores
 
-        if(pedidos.length === 0) {
-            // exibe o alerta de que não há pedidos
+        if (pedidos.length === 0) {
+            // Exibe o alerta de que não há pedidos
             alertaPedidos.classList.remove('visually-hidden');
         } else {
-            // esconde o alerta de que não há pedidos
+            // Esconde o alerta de que não há pedidos
             alertaPedidos.classList.add('visually-hidden');
 
             pedidos.forEach((pedido, index) => {
                 const pedidoItem = document.createElement('div');
                 pedidoItem.className = 'accordion-item';
-    
+
+                // Detalhes do pedido (número, data, valor total e status)
                 const pedidoHeader = `
-                    <div class="accordion-header d-flex align-items-center py-2">
-                        <div class="col-3 mb-0 mb-lg-0"><p class="mb-0">Numero: #${pedido.id}</p></div>
-                        <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Data: ${new Date(pedido.dataPedido).toLocaleDateString()}</p></div>
-                        <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Valor: R$ ${pedido.valorTotal.toFixed(2)}</p></div>
-                        <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${formatarStatusPedido(pedido.status)}</p></div>
-                        <div class="col-1 mb-4 mb-lg-0">
-                            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pedido-${index}" aria-expanded="false" aria-controls="pedido-${index}">
-                                <i class="bi bi-three-dots-vertical"></i>
-                            </button>
-                        </div>
+                <div class="accordion-header d-flex align-items-center py-2">
+                    <div class="col-3 mb-0 mb-lg-0"><p class="mb-0">Número: #${pedido.id}</p></div>
+                    <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Data: ${new Date(pedido.dataPedido).toLocaleDateString()}</p></div>
+                    <div class="col-2 mb-0 mb-lg-0"><p class="mb-0">Valor: R$ ${pedido.valorTotal.toFixed(2)}</p></div>
+                    <div class="col-4 mb-0 mb-lg-0 text-start"><p class="mb-0">Status: ${formatarStatusPedido(pedido.status)}</p></div>
+                    <div class="col-1 mb-4 mb-lg-0">
+                        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pedido-${index}" aria-expanded="false" aria-controls="pedido-${index}">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
                     </div>
-                `;
-    
+                </div>
+            `;
+
+                // Detalhes do pedido (e-mail de entrega, forma de pagamento e itens)
                 let itensPedido = '';
                 pedido.itens.forEach(item => {
-                    itensPedido += `<p>Produto: ${item.nomeProduto} - Quantidade: ${item.quantidade} - Valor Unitário: R$ ${item.valorUnitario.toFixed(2)}</p>`;
-                });
-    
-                const pedidoBody = `
-                    <div id="pedido-${index}" class="accordion-collapse collapse">
-                        <div class="accordion-body">${itensPedido}</div>
-                    </div>
+                    itensPedido += `
+                    <p>Produto: ${item.nomeProduto} - Quantidade: ${item.quantidade} - Valor Unitário: R$ ${item.valorUnitario.toFixed(2)}</p>
                 `;
-    
+                });
+
+                const pedidoBody = `
+                <div id="pedido-${index}" class="accordion-collapse collapse">
+                    <div class="accordion-body pt-1 text-start">
+                        <hr class="mt-0">
+                        <p><strong>E-mail de Entrega:</strong> ${pedido.emailEntrega || 'Não informado'}</p>
+                        <p><strong>Forma de Pagamento:</strong> ${formatarFormaPagamento(pedido.formaPagamento)}</p>
+                        <hr>
+                        <h6>Itens do Pedido:</h6>
+                        ${itensPedido}
+                    </div>
+                </div>
+            `;
+
                 pedidoItem.innerHTML = pedidoHeader + pedidoBody;
                 pedidosContainer.appendChild(pedidoItem);
             });
         }
     }
 
+    // Função para formatar a forma de pagamento
+    function formatarFormaPagamento(formaPagamento) {
+        switch (formaPagamento) {
+            case 'CARTAO_CREDITO':
+                return 'Cartão de Crédito';
+            case 'PIX':
+                return 'Pix';
+            case 'BOLETO':
+                return 'Boleto Bancário';
+            default:
+                return 'Desconhecida';
+        }
+    }
     // Função para carregar e exibir os pedidos do usuário
     async function carregarPedidos() {
         try {
