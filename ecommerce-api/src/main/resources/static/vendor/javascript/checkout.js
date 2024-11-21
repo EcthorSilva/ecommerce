@@ -79,6 +79,9 @@ function salvarPedido() {
             break;
     }
 
+    // Obtém o e-mail de entrega selecionado pelo usuário
+    const emailEntrega = document.getElementById("emailSelect").value;
+
     // Organiza os itens do pedido conforme o formato necessário
     const itensPedido = carrinhoItens.map(item => {
         return {
@@ -97,6 +100,7 @@ function salvarPedido() {
         valorTotal: valorTotal,
         formaPagamento: formaPagamento,
         clienteId: 0, 
+        emailEntrega: emailEntrega,
         itens: itensPedido
     };
 
@@ -132,3 +136,5 @@ function exibirErroToast(mensagem) {
 function formatarNumero(numero) {
     return numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
+console.log("checkout.js carregado com sucesso!");

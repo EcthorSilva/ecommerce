@@ -279,3 +279,5 @@ async function criarPedido() {
         }));
     }
 }
+
+console.log("payment.js carregado com sucesso!");
