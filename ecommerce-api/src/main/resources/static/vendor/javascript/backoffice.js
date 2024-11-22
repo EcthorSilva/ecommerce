@@ -242,6 +242,114 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Ocorreu um erro ao cadastrar o produto. Tente novamente.');
         }
     });
+
+    /* Pedidos */
+    async function carregarPedidos() {
+        try {
+            const response = await fetch('/api/pedidos');
+            if (!response.ok) {
+                throw new Error('Erro ao buscar pedidos');
+            }
+            const pedidos = await response.json();
+            preencherTabelaPedidos(pedidos);
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+    }
+    // Preenche a tabela de pedidos
+    function preencherTabelaPedidos(pedidos) {
+        const tabelaPedidos = document.getElementById('tabelaPedidos').getElementsByTagName('tbody')[0];
+        tabelaPedidos.innerHTML = ''; // Limpa a tabela antes de preencher
+
+        pedidos.forEach(pedido => {
+            const row = tabelaPedidos.insertRow();
+            row.insertCell(0).innerText = pedido.id;
+            row.insertCell(1).innerText = formatarData(pedido.dataPedido);
+            row.insertCell(2).innerText = pedido.valorTotal;
+            row.insertCell(3).innerText = formatarStatus(pedido.status);
+            row.insertCell(4).innerHTML = `
+            <button class="btn btn-outline-light" onclick="abrirModal(${pedido.id}, '${pedido.status}')">Editar</button>
+        `;
+        });
+
+        // Função para formatar o status 
+        function formatarStatus(status) {
+            switch (status) {
+                case 'AGUARDANDO_PAGAMENTO':
+                    return 'Aguardando Pagamento';
+                case 'PAGO':
+                    return 'Pago';
+                case 'ENVIADO':
+                    return 'Enviado';
+                case 'ENTREGUE':
+                    return 'Entregue';
+                case 'CANCELADO':
+                    return 'Cancelado';
+                default:
+                    return status;
+            }
+        }
+
+        // Função para formatar a data e hora
+        function formatarData(dataISO) {
+            const data = new Date(dataISO);
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
+            const ano = data.getFullYear();
+            const horas = String(data.getHours()).padStart(2, '0');
+            const minutos = String(data.getMinutes()).padStart(2, '0');
+            const segundos = String(data.getSeconds()).padStart(2, '0');
+
+            return `${dia}/${mes}/${ano} - ${horas}:${minutos}:${segundos}`;
+        }
+    }
+
+    // Função para abrir o modal
+    function abrirModal(id, statusAtual) {
+        const modal = new bootstrap.Modal(document.getElementById('modalEditarStatusPedido'));
+        document.getElementById('statusDoPedido').value = statusAtual;
+
+        // Adiciona evento ao botão de salvar
+        const btnSalvar = document.querySelector('#modalEditarStatusPedido .btn-primary');
+        btnSalvar.onclick = () => salvarStatus(id);
+
+        modal.show();
+    }
+
+    // Função para salvar o status
+    async function salvarStatus(id) {
+        const statusSelecionado = document.getElementById('statusDoPedido').value;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/pedidos/${id}/status?status=${statusSelecionado}`, {
+                method: 'PATCH',
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar o status do pedido');
+            }
+
+            exibirSucessoToast('Status atualizado com sucesso!');
+            carregarPedidos(); // Recarrega a lista de pedidos atualizada
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao atualizar o status do pedido.');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarStatusPedido'));
+            modal.hide();
+        }
+    }
+
+    // abrir o modal 
+    window.abrirModal = function (id, statusAtual) {
+        const modal = new bootstrap.Modal(document.getElementById('modalEditarStatusPedido'));
+        document.getElementById('statusDoPedido').value = statusAtual;
+    
+        const btnSalvar = document.querySelector('#modalEditarStatusPedido .btn-primary');
+        btnSalvar.onclick = () => salvarStatus(id);
+    
+        modal.show();
+    };
     
     // Função para fazer upload das imagens
     async function uploadImagens(produtoId, imagens) {
@@ -510,7 +618,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function showUsuarios() {
         document.getElementById('tabelaUsuarios').classList.remove('d-none');
         document.getElementById('tabelaProdutos').classList.add('d-none');
+        document.getElementById('tabelaPedidos').classList.add('d-none');
         document.getElementById('tituloTabela').innerText = 'Usuários';
+        document.getElementById('botaoNovo').classList.remove('d-none');
         document.getElementById('botaoNovo').innerText = '+ Novo Usuário';
         document.getElementById('paginas123').classList.add('d-none');
 
@@ -522,7 +632,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function showProdutos() {
         document.getElementById('tabelaUsuarios').classList.add('d-none');
         document.getElementById('tabelaProdutos').classList.remove('d-none');
+        document.getElementById('tabelaPedidos').classList.add('d-none');
         document.getElementById('tituloTabela').innerText = 'Produtos';
+        document.getElementById('botaoNovo').classList.remove('d-none');
         document.getElementById('botaoNovo').innerText = '+ Novo Produto';
         document.getElementById('paginas123').classList.remove('d-none');
 
@@ -531,8 +643,22 @@ document.addEventListener('DOMContentLoaded', function() {
         carregarProdutos();
     }
 
+    function showPedidos() {
+        document.getElementById('tabelaUsuarios').classList.add('d-none');
+        document.getElementById('tabelaProdutos').classList.add('d-none');
+        document.getElementById('tabelaPedidos').classList.remove('d-none');
+        document.getElementById('tituloTabela').innerText = 'Pedidos';
+        document.getElementById('botaoNovo').classList.add('d-none');
+        document.getElementById('paginas123').classList.add('d-none');
+
+        document.getElementById('barraDePesquisa').classList.add('d-none'); // Esconde a barra de pesquisa
+
+        carregarPedidos();
+    }
+
     window.showUsuarios = showUsuarios;
     window.showProdutos = showProdutos;
+    window.showPedidos = showPedidos;
 
     // Carregar usuários automaticamente ao carregar a página
     carregarUsuarios();
@@ -563,6 +689,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
         document.querySelector('#errorToast .toast-body').textContent = mensagem;
         errorToast.show();
+    }
+    // sucesso toast
+    function exibirSucessoToast(mensagem) {
+        var sucessoToast = new bootstrap.Toast(document.getElementById('sucessoToast'));
+        document.querySelector('#sucessoToast .toast-body').textContent = mensagem;
+        sucessoToast.show();
     }
 
     /* Validação */

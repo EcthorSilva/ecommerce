@@ -100,6 +100,14 @@
                                                     Produtos
                                                 </a>
                                             </li>
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link text-white" id="linkPedidos" onclick="showPedidos()">
+                                                    <svg class="bi pe-none me-2" width="16" height="16">
+                                                        <use xlink:href="#grid"></use>
+                                                    </svg>
+                                                    Pedidos
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -142,6 +150,22 @@
                                                     <th>Nome</th>
                                                     <th>Quantidade</th>
                                                     <th>Valor</th>
+                                                    <th>Status</th>
+                                                    <th>Editar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Conteúdo será preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+
+                                        <!-- Tabela de Pedidos (oculta inicialmente) -->
+                                        <table class="table table-bordered table-hover d-none" id="tabelaPedidos">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Data do Pedido</th>
+                                                    <th>Valor Total</th>
                                                     <th>Status</th>
                                                     <th>Editar</th>
                                                 </tr>
@@ -240,6 +264,39 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Modal Editar status do pedido -->
+        <div class="modal fade" id="modalEditarStatusPedido" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+            aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleId">
+                            Editar Status do Pedido
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="statusDoPedido" class="form-label">Status do Pedido</label>
+                            <select class="form-control" id="statusDoPedido">
+                                <option value="AGUARDANDO_PAGAMENTO">Aguardando Pagamento</option>
+                                <option value="PAGO">Pago</option>
+                                <option value="ENVIADO">Enviado</option>
+                                <option value="ENTREGUE">Entregue</option>
+                                <option value="CANCELADO">Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>      
         
         <!-- Modal Cadastro de Usuário -->
         <div class="modal fade" id="modalUsuario" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
@@ -459,6 +516,18 @@
                 </div>
                 <div class="toast-body">
                     <!-- mensagem de erro aqui -->
+                </div>
+            </div>
+        </div>
+        <!-- Sucesso toast -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="sucessoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto">Sucesso</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <!-- mensagem de sucesso aqui -->
                 </div>
             </div>
         </div>
