@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             row.insertCell(2).innerText = pedido.valorTotal;
             row.insertCell(3).innerText = formatarStatus(pedido.status);
             row.insertCell(4).innerHTML = `
-            <button class="btn btn-outline-light" onclick="abrirModal(${pedido.id}, '${pedido.status}')">Editar</button>
+            <button class="btn btn-outline-light" onclick="abrirModalPedidos(${pedido.id}, '${pedido.status}')">Editar</button>
         `;
         });
 
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Função para abrir o modal
-    function abrirModal(id, statusAtual) {
+    function abrirModalPedidos(id, statusAtual) {
         const modal = new bootstrap.Modal(document.getElementById('modalEditarStatusPedido'));
         document.getElementById('statusDoPedido').value = statusAtual;
 
@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // abrir o modal 
-    window.abrirModal = function (id, statusAtual) {
+    window.abrirModalPedidos = function (id, statusAtual) {
         const modal = new bootstrap.Modal(document.getElementById('modalEditarStatusPedido'));
         document.getElementById('statusDoPedido').value = statusAtual;
     
