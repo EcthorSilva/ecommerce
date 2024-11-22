@@ -304,17 +304,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Função para abrir o modal
-    function abrirModalPedidos(id, statusAtual) {
+    // abrir o modal 
+    window.abrirModalPedidos = function (id, statusAtual) {
         const modal = new bootstrap.Modal(document.getElementById('modalEditarStatusPedido'));
         document.getElementById('statusDoPedido').value = statusAtual;
 
-        // Adiciona evento ao botão de salvar
         const btnSalvar = document.querySelector('#modalEditarStatusPedido .btn-primary');
         btnSalvar.onclick = () => salvarStatus(id);
 
         modal.show();
-    }
+    };
 
     // Função para salvar o status
     async function salvarStatus(id) {
@@ -339,17 +338,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.hide();
         }
     }
-
-    // abrir o modal 
-    window.abrirModalPedidos = function (id, statusAtual) {
-        const modal = new bootstrap.Modal(document.getElementById('modalEditarStatusPedido'));
-        document.getElementById('statusDoPedido').value = statusAtual;
-    
-        const btnSalvar = document.querySelector('#modalEditarStatusPedido .btn-primary');
-        btnSalvar.onclick = () => salvarStatus(id);
-    
-        modal.show();
-    };
     
     // Função para fazer upload das imagens
     async function uploadImagens(produtoId, imagens) {
