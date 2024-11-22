@@ -280,4 +280,30 @@ async function criarPedido() {
     }
 }
 
+// Função para buscar os dados do endpoint e preencher o formulário
+async function preencherFormulario() {
+    try {
+        // Fazendo a requisição para o endpoint
+        const response = await fetch('http://localhost:8080/api/auth/me');
+        
+        // Verificando se a requisição foi bem-sucedida
+        if (!response.ok) {
+            throw new Error('Erro ao buscar os dados do usuário.');
+        }
+
+        // Convertendo a resposta para JSON
+        const dados = await response.json();
+
+        // Preenchendo os campos do formulário
+        document.getElementById('cardName').value = dados.nomeCompleto || '';
+        document.getElementById('cpf').value = dados.cpf || '';
+        document.getElementById('dataNascimento').value = dados.dataNascimento || '';
+    } catch (error) {
+        console.error('Erro ao preencher o formulário:', error);
+    }
+}
+
+// Chamando a função ao carregar a página
+document.addEventListener('DOMContentLoaded', preencherFormulario);
+
 console.log("payment.js carregado com sucesso!");
