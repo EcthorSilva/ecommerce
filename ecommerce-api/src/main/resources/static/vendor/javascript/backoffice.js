@@ -81,13 +81,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
     
-        const senhaCriptografada = btoa(senha); // Simulação de criptografia, substitua por uma real
-    
         const dados = {
             nome: nome,
             cpf: cpf,
             email: email,
-            senha: senhaCriptografada,
+            senha: senha,
             grupo: grupo,
             ativo: true
         };

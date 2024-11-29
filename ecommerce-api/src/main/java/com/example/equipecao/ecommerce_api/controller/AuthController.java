@@ -11,25 +11,29 @@
 
 package com.example.equipecao.ecommerce_api.controller;
 
+import java.util.Enumeration;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.equipecao.ecommerce_api.model.Cliente;
 import com.example.equipecao.ecommerce_api.model.Usuario;
 import com.example.equipecao.ecommerce_api.repository.ClienteRepository;
 import com.example.equipecao.ecommerce_api.repository.UsuarioRepository;
 
-import java.util.Enumeration;
-
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 
 @RestController
@@ -47,6 +51,7 @@ public class AuthController {
 
     // Método para realizar o login
     @PostMapping("/login")
+    @SuppressWarnings("UseSpecificCatch")
     public ResponseEntity<?> login(@RequestBody Usuario loginRequest, HttpServletRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -110,20 +115,23 @@ public class AuthController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
                 Object principal = authentication.getPrincipal();
-                if (principal instanceof Usuario) {
-                    Usuario usuario = (Usuario) principal;
-                    System.out.println("Usuário recuperado da sessão: " + usuario.getEmail());
-                    return ResponseEntity.ok(usuario);
-                } else if (principal instanceof Cliente) {
-                    Cliente cliente = (Cliente) principal;
-                    System.out.println("Cliente recuperado da sessão: " + cliente.getEmail());
-                    return ResponseEntity.ok(cliente);
-                } else {
-                    System.out.println("Principal não é uma instância de Usuario ou Cliente.");
-                }
+                return switch (principal) {
+                    case Usuario usuario -> {
+                        System.out.println("Usuário recuperado da sessão: " + usuario.getEmail());
+                        yield ResponseEntity.ok(usuario);
+                    }
+                    case Cliente cliente -> {
+                        System.out.println("Cliente recuperado da sessão: " + cliente.getEmail());
+                        yield ResponseEntity.ok(cliente);
+                    }
+                    default -> {
+                        yield ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Usuário não autenticado\"}");
+                    }
+                };
             } else {
                 System.out.println("Autenticação não encontrada ou não autenticada.");
             }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Usuário não autenticado\"}");
         } else {
             System.out.println("Sessão não encontrada.");
         }
