@@ -1,0 +1,23 @@
+# Arquivos e pastas do Git
+.git
+.gitignore
+
+# Pasta de build do Maven
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+
+# Arquivos de log
+*.log
+/logs/
+
+# Arquivos de configuração de IDEs
+.idea/
+.vscode/
+*.iml
+*.iws
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
