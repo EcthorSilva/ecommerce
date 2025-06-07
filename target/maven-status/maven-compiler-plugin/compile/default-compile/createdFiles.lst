@@ -1,0 +1,13 @@
+com/example/equipecao/ecommerce_api/config/SecurityConfig$1.class
+com/example/equipecao/ecommerce_api/config/HttpSessionConfig.class
+com/example/equipecao/ecommerce_api/repository/UsuarioRepository.class
+com/example/equipecao/ecommerce_api/model/Usuario.class
+com/example/equipecao/ecommerce_api/config/SecurityConfig$2.class
+com/example/equipecao/ecommerce_api/model/Grupo.class
+com/example/equipecao/ecommerce_api/model/Cliente.class
+com/example/equipecao/ecommerce_api/config/SecurityConfig.class
+com/example/equipecao/ecommerce_api/EcommerceApiApplication.class
+com/example/equipecao/ecommerce_api/service/CustomUserDetailsService.class
+com/example/equipecao/ecommerce_api/config/CustomAuthenticationEntryPoint.class
+com/example/equipecao/ecommerce_api/repository/ClienteRepository.class
+com/example/equipecao/ecommerce_api/config/WebConfig.class
